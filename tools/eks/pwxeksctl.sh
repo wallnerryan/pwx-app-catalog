@@ -198,7 +198,7 @@ read -p "Continue.. y/n?" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
     then
         echo
-        echo -e "${GREEN}Installing.....${NC}\n"
+        echo -e "${GREEN}Continuing.....${NC}\n"
     else
         echo
         echo -e "${RED}Exiting.....${NC}\n"
