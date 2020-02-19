@@ -196,4 +196,10 @@ NAME                             STATUS   ROLES    AGE     VERSION
 ip-192-168-31-176.ec2.internal   Ready    <none>   5h35m   v1.14.7-eks-1861c5
 ip-192-168-61-101.ec2.internal   Ready    <none>   5h35m   v1.14.7-eks-1861c5
 ip-192-168-78-229.ec2.internal   Ready    <none>   5h36m   v1.14.7-eks-1861c5
+
+$ kubectl get po -n kube-system -l name=portworx
+NAME             READY   STATUS    RESTARTS   AGE
+portworx-nfj5c   2/2     Running   0          5h35m
+portworx-p9bjs   2/2     Running   0          5h35m
+portworx-wstrt   2/2     Running   0          5h35m
 ```
