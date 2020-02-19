@@ -56,7 +56,7 @@ function verify_eks_ready() {
 }
 
 function delete_eks_cluster() {
-    eksctl delete cluster --name=${CLUSTER_NAME} --region ${REGION}
+    eksctl delete cluster --name=${CLUSTER_NAME} --region ${REGION} --wait
 }
 
 function install_pwx_prometheus() {
