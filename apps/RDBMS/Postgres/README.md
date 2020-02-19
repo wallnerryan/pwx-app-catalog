@@ -1,28 +1,38 @@
+This tutorial is based on - https://postgres-operator.readthedocs.io/en/latest/
 
 # Install
 
-Based on
- - https://postgres-operator.readthedocs.io/en/latest/
+## Pre-req
 
-## clone repo
+### Clone this repo
+```
+git clone https://github.com/wallnerryan/pwx-app-catalog
+cd pwx-app-catalog/apps/RDBMS/Postgres
+```
+## clone operator repo
 ```
 git clone https://github.com/zalando/postgres-operator.git
 cd postgres-operator
 ```
 
-## Deploy operator
+### Deploy operator manually
 ```
 kubectl create -f manifests/configmap.yaml  # configuration
 kubectl create -f manifests/operator-service-account-rbac.yaml  # identity and permissions
 kubectl create -f manifests/postgres-operator.yaml  # deployment
 kubectl create -f manifests/api-service.yaml  # operator API to be used by UI
+```
+
+> There is a Kustomization manifest that combines the mentioned resources (except for the CRD) - it can be used with kubectl 1.14 or newer as easy as:
+
+```
 kubectl apply -k github.com/zalando/postgres-operator/manifests
 ```
 
 ## verify
 `kubectl get pod -l name=postgres-operator`
 
-## manual deployment
+## deployment of UI
 `kubectl apply -f ui/manifests/`
 
 ## Deploy Portworx StorageClass
