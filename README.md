@@ -1,5 +1,7 @@
 # pwx-app-catalog
 
+A repository to streamline K8s + Portworx + Application stacks
+
 ## Prerequisites
 
 ### Dependencies
@@ -8,6 +10,25 @@
  - `ekscli`
  - Credentials in `~/.aws/credentials`
  - SSH key in `~/.ssh/aws-vm.pub`
+
+## Tools
+
+`pwxeksctl` : Launch EKS + Portworx Environments
+```
+ ./pwxeksctl.sh --help
+
+-h|--help
+-c|--create
+-d|--destroy
+-z|--region
+-n|--cluster-name (OPTIONAL: [default: default-px-cluster-0000])
+-r|--pwx-role-name (OPTIONAL [default: default-px-policy-0000])
+-s|--stand-alone-command
+-j|--install-helm
+--macos
+
+Provide a px-spec or edit current one for Portworx Customization
+```
 
 ## Launch EKS + Portworx 
 
