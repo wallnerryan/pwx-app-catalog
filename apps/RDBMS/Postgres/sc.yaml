@@ -4,6 +4,6 @@ metadata:
   name: portworx-sc-db
 provisioner: kubernetes.io/portworx-volume
 parameters:
-  repl: "3"
-  io_profile: "db"
+  repl: "2"
+  io_priority: "high"
 allowVolumeExpansion: true
