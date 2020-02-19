@@ -190,4 +190,10 @@ service/lighthouse-lb-service exposed
 waiting for Lighthouse LoadBalancer....
 lighthouse-lb-service   LoadBalancer   10.100.106.245   ab9c2ad7d532411eaa60912fb1f77a08-1936271332.us-east-1.elb.amazonaws.com   80:31733/TCP,443:30541/TCP   11s
 Done
+
+$ kubectl get no
+NAME                             STATUS   ROLES    AGE     VERSION
+ip-192-168-31-176.ec2.internal   Ready    <none>   5h35m   v1.14.7-eks-1861c5
+ip-192-168-61-101.ec2.internal   Ready    <none>   5h35m   v1.14.7-eks-1861c5
+ip-192-168-78-229.ec2.internal   Ready    <none>   5h36m   v1.14.7-eks-1861c5
 ```
