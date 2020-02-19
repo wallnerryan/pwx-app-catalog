@@ -78,8 +78,8 @@ function get_pwx_status() {
     PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
     until kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl status | grep "PX is operational"
     do
-      echo "waiting for portworx...."
-      sleep 15
+      echo "waiting for Portworx to be operational...."
+      sleep 30
     done
 }
 
@@ -119,6 +119,24 @@ function delete_loadbalancers() {
     kubectl delete svc prometheus-lb-service -n kube-system
 }
 
+function install_helm() {
+    if [[ $MACOSX == "true" ]]; then
+        wget https://get.helm.sh/helm-v3.1.0-darwin-amd64.tar.gz
+        tar -zxvf helm-v3.1.0-darwin-amd64.tar.gz
+        mv darwin-amd64/helm /usr/local/bin/helm
+        rm -rf darwin-amd64 helm-v3.1.0-darwin-amd64.tar.gz
+        helm version
+    fi
+    if [[ $MACOSX == "false" ]]; then
+        #else get amd64
+        wget https://get.helm.sh/helm-v3.1.0-linux-amd64.tar.gz
+        tar -zxvf helm-v3.1.0-linux-amd64.tar.gz
+        mv linux-amd64/helm /usr/local/bin/helm
+        rm -rf linux-amd64 helm-v3.1.0-linux-amd64.tar.gz
+        helm version
+    fi
+}
+
 function get_help() {
     echo
     echo "-h|--help"
@@ -127,9 +145,13 @@ function get_help() {
     echo "-z|--region"
     echo "-n|--cluster-name (OPTIONAL: [default: $CLUSTER_NAME])"
     echo "-r|--pwx-role-name (OPTIONAL [default: $PWX_ROLE_NAME])"
+    echo "-s|--stand-alone-command"
+    echo "-j|--install-helm"
+    echo "--macos"
     echo 
     echo "Provide a px-spec or edit current one for Portworx Customization"
     echo
+    exit 0
 }
 
 function cleanup_files() {
@@ -148,6 +170,9 @@ NC='\033[0m' # No Color
 POSITIONAL=()
 CREATE="false"
 DESTROY="false"
+NO_CREATE_OR_DESTROY="false"
+INSTALL_HELM="false"
+MACOSX="false"
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -155,6 +180,10 @@ key="$1"
 case $key in
     -h|--help)
     get_help
+    ;;
+    -s|--stand-alone-command)
+    NO_CREATE_OR_DESTROY="true"
+    shift # past argument
     ;;
     -c|--create)
     CREATE="true"
@@ -179,6 +208,14 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -j|--install-helm)
+    INSTALL_HELM="true"
+    shift # past argument
+    ;;
+    --macos)
+    MACOSX="true"
+    shift # past argument
+    ;;
     *)    # unknown option
     POSITIONAL+=("$1") # save it in an array for later
     shift # past argument
@@ -190,9 +227,12 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 echo 
 echo "CREATE        = ${CREATE}"
 echo "DESTROY       = ${DESTROY}"
+echo "RUN COMMAND   = ${NO_CREATE_OR_DESTROY}"
 echo "CLUSTER_NAME  = ${CLUSTER_NAME}"
 echo "REGION        = ${REGION}"
 echo "AWS ROLE NAME = ${PWX_ROLE_NAME}"
+echo "INSTALL HELM  = ${INSTALL_HELM}"
+echo "MACOSX        = ${MACOSX}"
 echo 
 read -p "Continue.. y/n?" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
@@ -258,5 +298,36 @@ if [[ ! -z $CREATE ]] && [[ $CREATE == "true" ]]; then
     expose_prometheus
     expose_lighthouse
     echo -e "${GREEN}Done${NC}"
+    if [[ $INSTALL_HELM == "true" ]]; then
+        echo -e "${YELLOW}Installing Helm......${NC}"
+        echo
+        install_helm
+        echo -e "${GREEN}Done${NC}"
+    fi
+    exit 0
+fi
+
+if [[ ! -z $NO_CREATE_OR_DESTROY ]] && [[ $NO_CREATE_OR_DESTROY == "true" ]]; then
+    echo -e "${GREEN}Running in stand-alone mode (no create/destroy)......${NC}"
+    echo
+    read -p "Continue.. y/n?" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            echo
+            echo -e "${GREEN}Continuing.....${NC}\n"
+        else
+            echo
+            echo -e "${RED}Exiting.....${NC}\n"
+            exit 0
+        fi
+    echo
+    echo -e "${GREEN}Checking options......${NC}"
+    echo
+    if [[ $INSTALL_HELM == "true" ]]; then
+        echo -e "${YELLOW}Installing Helm......${NC}"
+        echo
+        install_helm
+        echo -e "${GREEN}Done${NC}"
+    fi
     exit 0
 fi

@@ -25,6 +25,13 @@ or
 
 `$ pwxeksctl.sh -d -n default-px-cluster-0002`
 
+## Run in Stand-Alone mode.
+
+Use this mode when you have already created a cluster want want to run a command available to add a feature or capability to the cluster. 
+
+#### Example: Add Helm when running from mac.
+`./pwxeksctl.sh -s -j --macos`
+
 ## Example Output
 ```
 pwx-app-catalog/tools/eks  master ✗                                                                                                 6d ⚑ ◒
@@ -146,48 +153,6 @@ waiting for portworx....
 Defaulting container name to portworx.
 Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
 command terminated with exit code 126
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-command terminated with exit code 126
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-command terminated with exit code 126
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-command terminated with exit code 126
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-command terminated with exit code 126
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-command terminated with exit code 126
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-command terminated with exit code 1
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-command terminated with exit code 1
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-command terminated with exit code 1
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-command terminated with exit code 1
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
-waiting for portworx....
-Defaulting container name to portworx.
-Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
 waiting for portworx....
 Defaulting container name to portworx.
 Use 'kubectl describe pod/portworx-nfj5c -n kube-system' to see all of the containers in this pod.
