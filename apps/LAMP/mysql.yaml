@@ -1,0 +1,153 @@
+# By Sharon Campbell, Ken Simon, and Joe Beda for Heptio
+# create and claim a persistent volume for our pod
+# this works because we enabled cloud-provider=aws
+# so it can create a disk for itself
+# if you create a persistent volume another way
+# name it "database" and make sure the cluster has access
+
+apiVersion: storage.k8s.io/v1beta1
+kind: StorageClass
+metadata:
+  name: portworx-sc-repl3
+provisioner: kubernetes.io/portworx-volume
+parameters:
+  repl: "3"
+  priority_io: "medium"
+  snap_schedule: "periodic=30,5"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database
+  annotations:
+    volume.beta.kubernetes.io/storage-class: portworx-sc-repl3
+  labels:
+    app-group: wordpress
+    "heptio.com/example": lamp
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+# deploy the MySQL server container
+
+apiVersion: extensions/v1beta1
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    "heptio.com/example": lamp
+spec:
+  # number of MySQL pods (replicas) to run
+  replicas: 1
+  # The number of old deployments you want to keep around
+  revisionHistoryLimit: 5
+  # make replicas of kubernetes objects with the label app: mysql
+  selector:
+    matchLabels:
+      app: mysql
+  # the pod template describes what type of pod to create
+  # when the defined number of replicas are not up
+  # in this case, the pod that will be created is the one labeled app: mysql
+  template:
+    metadata:
+      labels:
+        # this label is referenced by the selector for the Deployment, which creates pods
+        # and by the selector for the Service, which exposes the pod to the cluster
+        app: mysql
+    # details of what container(s) will actually be run in this pod
+    spec:
+      containers:
+      # deploys MySQL from the default Docker Hub image
+      # https://hub.docker.com/_/mysql/
+      - image: mysql:5.7
+        name: mysql
+        # reserving resources from our cluster
+        resources:
+          requests:
+            cpu: 1
+            memory: 2Gi
+        # env sets environment variables in the container
+        # exactly like environment variables set from the command line
+        env:
+          # The MySQL image will configure a root password with the value of MYSQL_ROOT_PASSWORD...
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              # rather than embed sensitive details in this config
+              # we reference another Kubernetes object
+              # in this case, the Secret with the name: mysql-credentials
+              secretKeyRef:
+                name: mysql-credentials
+                # references the rootpw key-value pair from the mysql-credentials Secret
+                key: rootpw
+          # ... an initial non-root user with a username of the value of MYSQL_USER ...
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: mysql-credentials
+                key: user
+          # ... and a password of the value of MYSQL_PASSWORD ...
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-credentials
+                key: password
+          # ... and an initial database named sakila
+          # with the value of MYSQL_DATABASE (while granting MYSQL_USER superuser access.)
+          - name: MYSQL_DATABASE
+            value: sakila
+        # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+        # https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#exposing-pods-to-the-cluster
+        ports:
+        # make our mysql pod available within the cluster on port 3306
+        - containerPort: 3306
+        # attach our persistent disk
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          # https://kubernetes.io/docs/concepts/storage/volumes/#using-subpath
+          # the volume's data directory is mapped to /var/lib/mysql in the pod
+          subPath: data
+          # refers to the volume named database
+          name: database
+      # our spec requires a volume
+      volumes:
+      # the name assigned here is referenced by the container in volumeMounts: name
+      - name: database
+        persistentVolumeClaim:
+          # refers to the PersistentVolumeClaim named database
+          # this expects a PersistentVolumeClaim volume to exist already
+          # with correct permissions for this cluster
+          claimName: database
+
+---
+# expose a pod on mysql.default.svc.cluster.local to the rest of the cluster
+
+apiVersion: v1
+# https://kubernetes.io/docs/concepts/services-networking/service/
+kind: Service
+metadata:
+  # the name mysql here means you can reference the pod
+  # using the host mysql.default.svc.cluster.local from within the cluster
+  name: mysql
+  labels:
+    "heptio.com/example": lamp
+spec:
+  # allows us to set our own internal IP to reference this pod
+  # in this case we care about the port
+  # https://kubernetes.io/docs/concepts/services-networking/service/#choosing-your-own-ip-address
+  type: ClusterIP
+  ports:
+  # make the service available on this port within the cluster
+  - port: 3306
+    protocol: TCP
+  # apply this service to the pod with the label app: mysql
+  selector:
+    app: mysql

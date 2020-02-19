@@ -1,0 +1,13 @@
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: GroupVolumeSnapshot
+metadata:
+  name: cassandra-group-cloud-backup
+  annotations:
+    openstorage.io/auth-secret-name: px-admin-token
+    openstorage.io/auth-secret-namespace: default 
+spec:
+  pvcSelector:
+    matchLabels:
+      app: cassandra
+  options:
+    portworx/snapshot-type: cloud

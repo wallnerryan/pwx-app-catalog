@@ -1,0 +1,109 @@
+# By Sharon Campbell, Ken Simon, and Joe Beda for Heptio
+#deploy the PHP and Apache container from heptio/example-php-dbconnect
+
+apiVersion: extensions/v1beta1
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+kind: Deployment
+metadata:
+  name: php-dbconnect
+  labels:
+    heptio.com/example: lamp
+# number of PHP pods (replicas) to run
+# increase this number if you need to scale PHP horizontally
+# since we have 3, the LoadBalancer will serve our app from all 3
+spec:
+  replicas: 3
+  # The number of old deployments you want to keep around
+  revisionHistoryLimit: 5
+  # make replicas of kubernetes objects with the label app: php-dbconnect
+  selector:
+    matchLabels:
+      app: php-dbconnect
+  # the pod template describes what type of pod to create
+  # when the defined number of replicas are not up
+  # in this case, the pod that will be created is the one labeled app: php-dbconnect
+  template:
+    metadata:
+      # this label is referenced by the selector for the Deployment, which creates pods
+      # and by the selector for the Service, which creates the LoadBalancer
+      labels:
+        app: php-dbconnect
+    # details of what container(s) will actually be run in this pod
+    spec:
+      # deploys PHP and Apache and our custom application from the specified Docker Hub image
+      containers:
+      # deploys this custom PHP image from Docker Hub
+      # https://hub.docker.com/r/heptio/example-php-dbconnect/
+      - image: heptio/example-php-dbconnect
+        # download a fresh copy of the image if available, even if it has the same version label
+        imagePullPolicy: Always
+        name: php-dbconnect
+        #reserving resources from our cluster
+        resources:
+          requests:
+            cpu: 100m
+            memory: 1Gi
+        # env sets environment variables in the container
+        # exactly like environment variables set from the command line
+        env:
+          # The PHP image will configure an environment variable with the value of MYSQL_USER...
+          - name: MYSQL_USER
+            valueFrom:
+              # rather than embed sensitive details in this config
+              # we reference another Kubernetes object
+              # in this case, the Secret with the name: mysql-credentials
+              secretKeyRef:
+                name: mysql-credentials
+                # references the user key-value pair from the mysql-credentials Secret
+                key: user
+          # ... and a password of the value of MYSQL_PASSWORD ...
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-credentials
+                key: password
+          # ... and the MYSQL_HOST mysql.default.svc.cluster.local
+          # which comes from the Service with the name mysql in the mysql.yaml file
+          - name: MYSQL_HOST
+            value: mysql.lamp.svc.cluster.local
+        # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+        livenessProbe:
+          tcpSocket:
+            port: 80
+        # make our mysql pod available within the cluster on port 80
+        ports:
+        - containerPort: 80
+
+---
+# expose PHP and Apache on port 80 to the world through a load balancer
+
+apiVersion: v1
+# https://kubernetes.io/docs/concepts/services-networking/service/
+kind: Service
+metadata:
+  # the name web here means you can reference the PHP pods
+  # using the host web.default.svc.cluster.local from within the cluster
+  name: web
+  labels:
+    "heptio.com/example": lamp
+spec:
+  ports:
+  # make the service available on this port
+  - port: 80
+    protocol: TCP
+  selector:
+    # apply this service to the pod with the label app: mysql
+    app: php-dbconnect
+  # a LoadBalancer makes this service available over the public internet
+  # all of our PHP/Apache pods are load balanced behind a single public network address
+
+  # this works because we have cloudprovider=aws set on the cluster
+  # this actually provisions AWS Elastic Load Balancing https://aws.amazon.com/elasticloadbalancing/
+  # try running "kubectl get service web -o wide" after you create the Service
+  # You'll get a lengthy DNS name which you can use with a DNS CNAME entry with your own domain
+  # like http://xxxxxxxxxxxxxxx.us-east-2.elb.amazonaws.com/
+  # this is where the PHP app will be publicly viewable
+
+  # https://kubernetes.io/docs/getting-started-guides/scratch/#cloud-providers
+  # https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
+  type: LoadBalancer

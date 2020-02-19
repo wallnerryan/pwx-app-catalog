@@ -1,0 +1,66 @@
+# By Sharon Campbell, Ken Simon, and Joe Beda for Heptio
+# one-time Job that executes the /tmp/mysql-sakila-data-loader.sh script
+# from another container copy of our PHP image
+# this is how we get initial data for our database
+# we use https://dev.mysql.com/doc/sakila/en/ as the database in our demo
+
+apiVersion: batch/v1
+# https://kubernetes.io/docs/concepts/jobs/run-to-completion-finite-workloads/
+kind: Job
+metadata:
+  name: mysql-data-loader-with-timeout
+  labels:
+    "heptio.com/example": lamp
+spec:
+  # https://kubernetes.io/docs/concepts/jobs/run-to-completion-finite-workloads/#job-termination-and-cleanup
+  activeDeadlineSeconds: 100
+  template:
+    metadata:
+      name: mysql-data-loader
+    spec:
+      # this creates a temporary container just to run this Job
+      containers:
+      - name: mysql-data-loader
+        # deploys this custom PHP image from Docker Hub
+        # https://hub.docker.com/r/heptio/example-php-dbconnect/
+        # this is the same PHP image we use to create the PHP Deployment in php.yaml
+        # it could be a completely different image, though, if our script was in its own image
+        # it's just convenient to have our PHP app and our data loader script packaged together
+        # make sure the host image for your script has any utilities the script needs
+        # like curl and mysql-client, in our case
+        image: heptio/example-php-dbconnect
+        # env sets environment variables in the container
+        # exactly like environment variables set from the command line
+        env:
+          # The PHP image will configure an environment variable with the value of MYSQL_USER...
+          - name: MYSQL_USER
+            # rather than embed sensitive details in this config
+            # we reference another Kubernetes object
+            # in this case, the Secret with the name: mysql-credentials            
+            valueFrom:
+              secretKeyRef:
+                name: mysql-credentials
+                # references the user key-value pair from the mysql-credentials Secret
+                key: user
+          # ... and a password of the value of MYSQL_PASSWORD ...
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-credentials
+                key: password
+          # ... and the MYSQL_HOST mysql.default.svc.cluster.local
+          # which comes from the Service with the name mysql in the mysql.yaml file
+          - name: MYSQL_HOST
+            value: mysql.lamp.svc.cluster.local
+        # you can replace /tmp/mysql-sakila-data-loader.sh
+        # with a link to your own script in your image 
+        command: ["/tmp/mysql-sakila-data-loader.sh"]
+      # if running /tmp/mysql-sakila-data-loader.sh returns a non-zero exit status
+      # the Job will be considered a failure, and this Job will run again
+      # restartPolicy: OnFailure ensures this Job will keep attempting to load our data
+      # until it completes successfully
+      # so if this Job tries to run before the PHP server is up, or before the MySQL server is up
+      # or before the Secret is created, this Job will keep trying to complete
+      # the mysql-sakila-data-loader.sh script itself has "set -o errexit"
+      # so if any commands the script itself launches fail, the whole script returns nonzero
+      restartPolicy: OnFailure

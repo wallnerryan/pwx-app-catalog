@@ -1,0 +1,86 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: default-view
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: default
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+    name: mongo-pwx-storage-class
+provisioner: kubernetes.io/portworx-volume
+parameters:
+   repl: "3"
+---
+# Headless service for stable DNS entries of StatefulSet members.
+apiVersion: v1
+kind: Service
+metadata:
+ name: mongo
+ labels:
+   name: mongo
+spec:
+ ports:
+ - port: 27017
+   targetPort: 27017
+ clusterIP: None
+ selector:
+   role: mongo
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+ name: mongo
+ labels:
+  app: mongo
+spec:
+ serviceName: mongo
+ replicas: 3
+ template:
+   metadata:
+     labels:
+       role: mongo
+       environment: test
+       type: workload
+       app: mongo
+   spec:
+     schedulerName: stork
+     terminationGracePeriodSeconds: 10
+     containers:
+       - name: mongo
+         image: mongo
+         command:
+           - mongod
+           - "--replSet"
+           - rs0
+           - "--smallfiles"
+           - "--noprealloc"
+           - "--bind_ip_all"
+         ports:
+           - containerPort: 27017
+         volumeMounts:
+           - name: mongo-persistent-storage
+             mountPath: /data/db
+       - name: mongo-sidecar
+         image: cvallance/mongo-k8s-sidecar
+         env:
+           - name: MONGO_SIDECAR_POD_LABELS
+             value: "role=mongo,environment=test"
+ volumeClaimTemplates:
+ - metadata:
+     name: mongo-persistent-storage
+   spec:
+     storageClassName: mongo-pwx-storage-class
+     accessModes:
+       - ReadWriteOnce
+     resources:
+       requests:
+         storage: 30G

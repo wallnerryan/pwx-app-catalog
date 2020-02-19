@@ -1,0 +1,21 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: pwx-pg-cluster
+  namespace: default
+spec:
+  enableMasterLoadBalancer: true
+  teamId: "pwx"
+  volume:
+    storageClass: portworx-sc-db
+    size: 5Gi
+  numberOfInstances: 3
+  users:
+    pwxuser:  # database owner
+    - superuser
+    - createdb
+    foo_user: []  # role for application foo
+  databases:
+    demo: pwxuser # dbname: owner
+  postgresql:
+    version: "11"

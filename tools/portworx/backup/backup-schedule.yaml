@@ -1,0 +1,13 @@
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: ApplicationBackupSchedule
+metadata:
+  name: backup-schedule
+  namespace: demo
+spec:
+  schedulePolicyName: backup-policy
+  template:
+    spec:
+      backupLocation: mysql-backup
+      namespaces:
+      - demo
+      reclaimPolicy: Delete

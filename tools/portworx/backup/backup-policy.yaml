@@ -1,0 +1,16 @@
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: SchedulePolicy
+metadata:
+  name: backup-policy
+  namespace: demo
+policy:
+  interval:
+    intervalMinutes: 30
+  daily:
+    time: "10:00PM"
+  weekly:
+    day: "Thursday"
+    time: "1:00AM"
+  monthly:
+    date: 14
+    time: "2:00AM"

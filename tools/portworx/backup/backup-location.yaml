@@ -1,0 +1,12 @@
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: BackupLocation
+metadata:
+  name: mysql-backup
+  namespace: demo
+  annotations:
+    stork.libopenstorage.org/skipresource: "true"
+location:
+  type: s3
+  path: "k8s-backups-pwx"
+  secretConfig: s3secret
+  sync: true
