@@ -61,19 +61,34 @@ echo $PGHOST
 ```
 
 ## Get passsword
+
+### Postgres User
 ```
 export PGPASSWORD=$(kubectl get secret postgres.pwx-pg-cluster.credentials -o 'jsonpath={.data.password}' | base64 --decode)
 ```
 
+### pwxuser
+```
+export PGPASSWORD=$(kubectl get secret pwxuser.pwx-pg-cluster.credentials -o 'jsonpath={.data.password}' | base64 --decode)
+```
+
+
 ## Connect (if you are on mac, you can run `brew install postgresql`)
+
+### Connect to default admin db
 ```
 export PGSSLMODE=require
 psql -U postgres
 ```
 
+### connect to portworx user demo db
+```
+export PGSSLMODE=require
+psql -a -U pwxuser -d demo
+```
+
 ## Get Cluster Info
 ```
-root@pwx-pg-cluster-0:/home/postgres# psql -U postgres
 psql (12.1 (Ubuntu 12.1-1.pgdg18.04+1), server 11.6 (Ubuntu 11.6-1.pgdg18.04+1))
 Type "help" for help.
 
