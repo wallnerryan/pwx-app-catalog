@@ -140,14 +140,15 @@ function install_helm() {
 function get_help() {
     echo
     echo "-h|--help"
-    echo "-c|--create"
-    echo "-d|--destroy"
-    echo "-z|--region"
-    echo "-n|--cluster-name (OPTIONAL: [default: $CLUSTER_NAME])"
-    echo "-r|--pwx-role-name (OPTIONAL [default: $PWX_ROLE_NAME])"
-    echo "-s|--stand-alone-command"
-    echo "-j|--install-helm"
-    echo "--macos"
+    echo "-c|--create               (Create EKS+PWX)"
+    echo "-d|--destroy              (Destroy EKS+PWX)"
+    echo "-z|--region               (AWS Region)"
+    echo "-n|--cluster-name         (OPTIONAL: [default: $CLUSTER_NAME])"
+    echo "-r|--pwx-role-name        (OPTIONAL: [default: $PWX_ROLE_NAME])"
+    echo "-s|--stand-alone-command  (OPTIONAL: Run command that doesnt Install/Destroy EKS/PWX)"
+    echo "-j|--install-helm         (OPTIONAL: Install Helm CLI tools"
+    echo "--nopx                    (OPTIONAL: Do not install Portworx, just setup EKS)"
+    echo "--macos                   (OPTIONAL: Running on macosx, not linux.)"
     echo 
     echo "Provide a px-spec or edit current one for Portworx Customization"
     echo
@@ -173,6 +174,7 @@ DESTROY="false"
 NO_CREATE_OR_DESTROY="false"
 INSTALL_HELM="false"
 MACOSX="false"
+PWX="true"
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -216,6 +218,10 @@ case $key in
     MACOSX="true"
     shift # past argument
     ;;
+    --nopx)
+    PWX="false"
+    shift # past argument
+    ;;
     *)    # unknown option
     POSITIONAL+=("$1") # save it in an array for later
     shift # past argument
@@ -223,6 +229,11 @@ case $key in
 esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
+
+if [[ ! -z $DESTROY ]] && [[ $DESTROY == "true" ]]; then
+    echo -e "\n${YELLOW}Setting PWX Install to False, since we're destroying things${NC}\n"
+    PWX="false"
+fi
 
 echo 
 echo "CREATE        = ${CREATE}"
@@ -232,7 +243,8 @@ echo "CLUSTER_NAME  = ${CLUSTER_NAME}"
 echo "REGION        = ${REGION}"
 echo "AWS ROLE NAME = ${PWX_ROLE_NAME}"
 echo "INSTALL HELM  = ${INSTALL_HELM}"
-echo "MACOSX        = ${MACOSX}"
+echo "MACOSX        = ${MACOSX} (only needed for helm install, otherwise ignored)"
+echo "INSTALL PWX?  = ${PWX}"
 echo 
 read -p "Continue.. y/n?" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
@@ -284,20 +296,24 @@ if [[ ! -z $CREATE ]] && [[ $CREATE == "true" ]]; then
     echo
     verify_eks_ready
     echo -e "${GREEN}Done${NC}"
-    echo -n "Installing Portworx on the EKS cluster......"
-    echo
-    install_portworx
-    echo -e "${GREEN}Done${NC}"
-    echo -n "Waiting until Portworx is Operational......"
-    echo
-    get_pwx_status
-    echo -e "${GREEN}Done${NC}"
-    echo -n "Exposing Ports......"
-    echo
-    expose_grafana
-    expose_prometheus
-    expose_lighthouse
-    echo -e "${GREEN}Done${NC}"
+    if [[ $PWX == "true" ]]; then
+        echo -n "Installing Portworx on the EKS cluster......"
+        echo
+        install_portworx
+        echo -e "${GREEN}Done${NC}"
+        echo -n "Waiting until Portworx is Operational......"
+        echo
+        get_pwx_status
+        echo -e "${GREEN}Done${NC}"
+        echo -n "Exposing Ports......"
+        echo
+        expose_grafana
+        expose_prometheus
+        expose_lighthouse
+        echo -e "${GREEN}Done${NC}"
+    else: 
+        echo -e "${YELLOW}Skipping Portworx Install......${NC}"
+    fi
     if [[ $INSTALL_HELM == "true" ]]; then
         echo -e "${YELLOW}Installing Helm......${NC}"
         echo
@@ -328,6 +344,24 @@ if [[ ! -z $NO_CREATE_OR_DESTROY ]] && [[ $NO_CREATE_OR_DESTROY == "true" ]]; th
         echo
         install_helm
         echo -e "${GREEN}Done${NC}"
+    fi
+    if [[ $PWX == "true" ]]; then
+        echo -n "Installing Portworx on the EKS cluster......"
+        echo
+        install_portworx
+        echo -e "${GREEN}Done${NC}"
+        echo -n "Waiting until Portworx is Operational......"
+        echo
+        get_pwx_status
+        echo -e "${GREEN}Done${NC}"
+        echo -n "Exposing Ports......"
+        echo
+        expose_grafana
+        expose_prometheus
+        expose_lighthouse
+        echo -e "${GREEN}Done${NC}"
+    else: 
+        echo -e "${YELLOW}Skipping Portworx Install......${NC}"
     fi
     exit 0
 fi

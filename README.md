@@ -18,14 +18,15 @@ A repository to streamline K8s + Portworx + Application stacks
  ./pwxeksctl.sh --help
 
 -h|--help
--c|--create
--d|--destroy
--z|--region
--n|--cluster-name (OPTIONAL: [default: default-px-cluster-0000])
--r|--pwx-role-name (OPTIONAL [default: default-px-policy-0000])
--s|--stand-alone-command
--j|--install-helm
---macos
+-c|--create               (Create EKS+PWX)
+-d|--destroy              (Destroy EKS+PWX)
+-z|--region               (AWS Region)
+-n|--cluster-name         (OPTIONAL: [default: default-px-cluster-0005])
+-r|--pwx-role-name        (OPTIONAL: [default: default-px-policy-0000])
+-s|--stand-alone-command  (OPTIONAL: Run command that doesnt Install/Destroy EKS/PWX)
+-j|--install-helm         (OPTIONAL: Install Helm CLI tools
+--nopx                    (OPTIONAL: Do not install Portworx, just setup EKS)
+--macos                   (OPTIONAL: Running on macosx, not linux.)
 
 Provide a px-spec or edit current one for Portworx Customization
 ```
@@ -56,13 +57,17 @@ Use this mode when you have already created a cluster want want to run a command
 ## Example Output
 ```
 pwx-app-catalog/tools/eks  master ✗                                                                                                 6d ⚑ ◒
-▶ ./pwxeksctl.sh -c -n default-px-cluster-0004
+▶ ./pwxeksctl.sh -c -n default-px-cluster-0004 -r px-role-0004
 
 CREATE        = true
 DESTROY       = false
+RUN COMMAND   = false
 CLUSTER_NAME  = default-px-cluster-0004
 REGION        = us-east-1
-AWS ROLE NAME = default-px-policy-0000
+AWS ROLE NAME = px-role-0006
+INSTALL HELM  = false
+MACOSX        = false (only needed for helm install, otherwise ignored)
+INSTALL PWX?  = false
 
 Continue.. y/n?y
 Continuing.....
