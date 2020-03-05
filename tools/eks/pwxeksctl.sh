@@ -151,6 +151,7 @@ function get_help() {
     echo "--macos                   (OPTIONAL: Running on macosx, not linux.)"
     echo 
     echo "Provide a px-spec or edit current one at px-spec.yaml for Portworx Customization"
+    echo
     echo "To change EKS cluster, edit cluster.yml"
     echo
     exit 0

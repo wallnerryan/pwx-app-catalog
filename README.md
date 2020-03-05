@@ -28,7 +28,9 @@ A repository to streamline K8s + Portworx + Application stacks
 --nopx                    (OPTIONAL: Do not install Portworx, just setup EKS)
 --macos                   (OPTIONAL: Running on macosx, not linux.)
 
-Provide a px-spec or edit current one for Portworx Customization
+Provide a px-spec or edit current one at px-spec.yaml for Portworx Customization
+
+To change EKS cluster, edit cluster.yml
 ```
 
 ## Launch EKS + Portworx 
