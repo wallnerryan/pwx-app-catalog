@@ -150,7 +150,8 @@ function get_help() {
     echo "--nopx                    (OPTIONAL: Do not install Portworx, just setup EKS)"
     echo "--macos                   (OPTIONAL: Running on macosx, not linux.)"
     echo 
-    echo "Provide a px-spec or edit current one for Portworx Customization"
+    echo "Provide a px-spec or edit current one at px-spec.yaml for Portworx Customization"
+    echo "To change EKS cluster, edit cluster.yml"
     echo
     exit 0
 }
