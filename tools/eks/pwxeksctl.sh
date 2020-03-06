@@ -137,6 +137,16 @@ function install_helm() {
     fi
 }
 
+function install_pxcentral_onprem() {
+    # TEMPORARY, PX CENTRAL ON PREM INSALL
+    # WILL CHANGE OVER TIME.
+    git clone https://github.com/portworx/pxcentral-onprem-operator -b 1.0.0
+    cp pxcentral-onprem-operator/install.sh .
+    read -p "Enter --license-password for px central onprem: " -s -e -r licpass;
+    echo -e "${YELLOW}Setting password and installing...${NC}\n"
+    sh install.sh --license-password ${licpass} --kubeconfig ~/.kube/config
+}
+
 function get_help() {
     echo
     echo "-h|--help"
@@ -148,6 +158,7 @@ function get_help() {
     echo "-s|--stand-alone-command  (OPTIONAL: Run command that doesnt Install/Destroy EKS/PWX)"
     echo "-j|--install-helm         (OPTIONAL: Install Helm CLI tools"
     echo "--nopx                    (OPTIONAL: Do not install Portworx, just setup EKS)"
+    echo "--installpxc              (OPTIONAL: Install Portworx Central. [includes PX])"
     echo "--macos                   (OPTIONAL: Running on macosx, not linux.)"
     echo 
     echo "Provide a px-spec or edit current one at px-spec.yaml for Portworx Customization"
@@ -177,6 +188,7 @@ NO_CREATE_OR_DESTROY="false"
 INSTALL_HELM="false"
 MACOSX="false"
 PWX="true"
+PWX_CENTRAL="true"
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -224,6 +236,10 @@ case $key in
     PWX="false"
     shift # past argument
     ;;
+    --installpxc)
+    PWX_CENTRAL="TRUE"
+    shift # past argument
+    ;;
     *)    # unknown option
     POSITIONAL+=("$1") # save it in an array for later
     shift # past argument
@@ -238,15 +254,16 @@ if [[ ! -z $DESTROY ]] && [[ $DESTROY == "true" ]]; then
 fi
 
 echo 
-echo "CREATE        = ${CREATE}"
-echo "DESTROY       = ${DESTROY}"
-echo "RUN COMMAND   = ${NO_CREATE_OR_DESTROY}"
-echo "CLUSTER_NAME  = ${CLUSTER_NAME}"
-echo "REGION        = ${REGION}"
-echo "AWS ROLE NAME = ${PWX_ROLE_NAME}"
-echo "INSTALL HELM  = ${INSTALL_HELM}"
-echo "MACOSX        = ${MACOSX} (only needed for helm install, otherwise ignored)"
-echo "INSTALL PWX?  = ${PWX}"
+echo "CREATE                = ${CREATE}"
+echo "DESTROY               = ${DESTROY}"
+echo "RUN COMMAND           = ${NO_CREATE_OR_DESTROY}"
+echo "CLUSTER_NAME          = ${CLUSTER_NAME}"
+echo "REGION                = ${REGION}"
+echo "AWS ROLE NAME         = ${PWX_ROLE_NAME}"
+echo "INSTALL HELM          = ${INSTALL_HELM}"
+echo "MACOSX                = ${MACOSX} (only needed for helm install, otherwise ignored)"
+echo "INSTALL PWX?          = ${PWX}"
+echo "INSTALL PWX CENTRAL?  = ${PWX_CENTRAL}"
 echo 
 read -p "Continue.. y/n?" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
