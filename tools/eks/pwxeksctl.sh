@@ -333,6 +333,18 @@ if [[ ! -z $CREATE ]] && [[ $CREATE == "true" ]]; then
     else
         echo -e "${YELLOW}Skipping Portworx Install......${NC}"
     fi
+    if [[ $PWX_CENTRAL == "true" ]]; then
+        echo -n "Installing Portworx Central on the EKS cluster......"
+        echo
+        install_pxcentral_onprem
+        echo -e "${GREEN}Done${NC}"
+        echo -n "Waiting until Portworx is Operational......"
+        echo
+        get_pwx_status
+        echo -e "${GREEN}Done${NC}"
+    else
+        echo -e "${YELLOW}Skipping Portworx Central Install......${NC}"
+    fi
     if [[ $INSTALL_HELM == "true" ]]; then
         echo -e "${YELLOW}Installing Helm......${NC}"
         echo
@@ -363,6 +375,18 @@ if [[ ! -z $NO_CREATE_OR_DESTROY ]] && [[ $NO_CREATE_OR_DESTROY == "true" ]]; th
         echo
         install_helm
         echo -e "${GREEN}Done${NC}"
+    fi
+    if [[ $PWX_CENTRAL == "true" ]]; then
+        echo -n "Installing Portworx Central on the EKS cluster......"
+        echo
+        install_pxcentral_onprem
+        echo -e "${GREEN}Done${NC}"
+        echo -n "Waiting until Portworx is Operational......"
+        echo
+        get_pwx_status
+        echo -e "${GREEN}Done${NC}"
+    else
+        echo -e "${YELLOW}Skipping Portworx Central Install......${NC}"
     fi
     if [[ $PWX == "true" ]]; then
         echo -n "Installing Portworx on the EKS cluster......"
