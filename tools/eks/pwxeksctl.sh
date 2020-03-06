@@ -313,7 +313,7 @@ if [[ ! -z $CREATE ]] && [[ $CREATE == "true" ]]; then
         expose_prometheus
         expose_lighthouse
         echo -e "${GREEN}Done${NC}"
-    else: 
+    else
         echo -e "${YELLOW}Skipping Portworx Install......${NC}"
     fi
     if [[ $INSTALL_HELM == "true" ]]; then
