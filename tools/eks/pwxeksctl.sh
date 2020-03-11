@@ -138,13 +138,14 @@ function install_helm() {
 }
 
 function install_pxcentral_onprem() {
-    # TEMPORARY, PX CENTRAL ON PREM INSALL
-    # WILL CHANGE OVER TIME.
-    git clone https://github.com/portworx/pxcentral-onprem-operator -b 1.0.0
-    cp pxcentral-onprem-operator/install.sh .
+    # Currently PXC 1.0.0
     read -p "Enter --license-password for px central onprem: " -s -e -r licpass;
     echo -e "${YELLOW}Setting password and installing...${NC}\n"
-    sh install.sh --license-password ${licpass} --kubeconfig ~/.kube/config
+    sh central-install-1-0-0.sh \
+      --license-password ${licpass} \
+      --kubeconfig ~/.kube/config \
+      --admin-user admin \
+      --admin-password ${licpass}
 }
 
 function get_help() {
@@ -188,7 +189,7 @@ NO_CREATE_OR_DESTROY="false"
 INSTALL_HELM="false"
 MACOSX="false"
 PWX="true"
-PWX_CENTRAL="true"
+PWX_CENTRAL="false"
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -237,7 +238,7 @@ case $key in
     shift # past argument
     ;;
     --installpxc)
-    PWX_CENTRAL="TRUE"
+    PWX_CENTRAL="true"
     shift # past argument
     ;;
     *)    # unknown option
@@ -300,6 +301,14 @@ if [[ ! -z $DESTROY ]] && [[ $DESTROY == "true" ]]; then
         echo -e "${RED}Exiting.....${NC}\n"
         exit 0
     fi
+fi
+
+# Quick safety/validation check
+if [[ $PWX_CENTRAL == "true" ]] && [[ $PWX == "true" ]]; then
+    echo -e "${RED}....Cannot install PX Central and PX${NC}\n"
+    echo -e "${YELLOW}....Use --nopx to turn off px install${NC}\n"
+    echo -e "${RED}Exiting.....${NC}\n"
+    exit 0
 fi
 
 if [[ ! -z $CREATE ]] && [[ $CREATE == "true" ]]; then
