@@ -145,7 +145,8 @@ function install_pxcentral_onprem() {
       --license-password ${licpass} \
       --kubeconfig ~/.kube/config \
       --admin-user admin \
-      --admin-password ${licpass}
+      --admin-password ${licpass} \
+      --cloud
 }
 
 function get_help() {
