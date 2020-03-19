@@ -46,28 +46,23 @@ spec:
       labels:
         app: mysql
         name: "mysql"
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  spec:
-    containers:
-    - name: mysql
-      image: mysql:5.6
-      env:
-        # Use secret in real usage
-      - name: MYSQL_ROOT_PASSWORD
-        value: password
-      - name: ENVVARTEST
-        value: foo
-      ports:
-      - containerPort: 3306
-        name: mysql
-      volumeMounts:
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.6
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        - name: ENVVARTEST
+          value: foo
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+      volumes:
       - name: mysql-data
-        mountPath: /var/lib/mysql
-    volumes:
-    - name: mysql-data
-      persistentVolumeClaim:
-        claimName: mysql-data
+        persistentVolumeClaim:
+          claimName: mysql-data
