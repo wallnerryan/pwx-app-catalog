@@ -1,7 +1,7 @@
 kind: StorageClass
 apiVersion: storage.k8s.io/v1beta1
 metadata:
-    name: mysql-tester-class
+    name: mysql-storage-class
 provisioner: kubernetes.io/portworx-volume
 allowVolumeExpansion: true
 parameters:
@@ -22,7 +22,7 @@ metadata:
    labels:
      app: mysql
    annotations:
-     volume.beta.kubernetes.io/storage-class: mysql-tester-class
+     volume.beta.kubernetes.io/storage-class: mysql-storage-class
 spec:
    accessModes:
      - ReadWriteOnce
