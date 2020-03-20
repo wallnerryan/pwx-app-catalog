@@ -64,7 +64,6 @@ spec:
            - mongod
            - "--replSet"
            - rs0
-           - "--smallfiles"
            - "--noprealloc"
            - "--bind_ip_all"
          ports:
