@@ -35,7 +35,7 @@ spec:
  selector:
    role: mongo
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
  name: mongo
@@ -43,6 +43,9 @@ metadata:
   app: mongo
 spec:
  serviceName: mongo
+ selector:
+    matchLabels:
+      app: mongo
  replicas: 3
  template:
    metadata:
