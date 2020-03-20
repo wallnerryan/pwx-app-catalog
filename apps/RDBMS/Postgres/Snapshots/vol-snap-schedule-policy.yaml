@@ -1,0 +1,57 @@
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: SchedulePolicy
+metadata:
+  name: daily
+policy:
+  daily:
+    time: "10:00PM"
+    retain: 3
+---
+
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: VolumeSnapshotSchedule
+metadata:
+  name: postgres-vol0-snapshot-schedule
+  namespace: default
+  annotations:
+    portworx/snapshot-type: local
+spec:
+  schedulePolicyName: daily
+  suspend: false
+  reclaimPolicy: Delete
+  template:
+    spec:
+      persistentVolumeClaimName: pgdata-pwx-pg-cluster-0
+
+---
+
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: VolumeSnapshotSchedule
+metadata:
+  name: postgres-vol1-snapshot-schedule
+  namespace: default
+  annotations:
+    portworx/snapshot-type: local
+spec:
+  schedulePolicyName: daily
+  suspend: false
+  reclaimPolicy: Delete
+  template:
+    spec:
+      persistentVolumeClaimName: pgdata-pwx-pg-cluster-1
+---
+
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: VolumeSnapshotSchedule
+metadata:
+  name: postgres-vol2-snapshot-schedule
+  namespace: default
+  annotations:
+    portworx/snapshot-type: local
+spec:
+  schedulePolicyName: daily
+  suspend: false
+  reclaimPolicy: Delete
+  template:
+    spec:
+      persistentVolumeClaimName: pgdata-pwx-pg-cluster-2
