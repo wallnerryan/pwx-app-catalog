@@ -1,0 +1,16 @@
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: VolumeSnapshotSchedule
+metadata:
+  name: mysql-snapshot-schedule
+  namespace: default
+  annotations:
+    portworx/snapshot-type: cloud
+    portworx/cloud-cred-id: baee4316-2550-4a76-8fba-26ddbf1fd628
+    stork/snapshot-restore-namespaces: otherNamespace1
+spec:
+  schedulePolicyName: twomin
+  suspend: false
+  reclaimPolicy: Delete
+  template:
+    spec:
+      persistentVolumeClaimName: mysql-data
