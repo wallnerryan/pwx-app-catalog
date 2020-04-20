@@ -11,6 +11,7 @@ metadata:
   name: mysql-data-loader-with-timeout
   labels:
     "heptio.com/example": lamp
+    app-group: wordpress
 spec:
   # https://kubernetes.io/docs/concepts/jobs/run-to-completion-finite-workloads/#job-termination-and-cleanup
   activeDeadlineSeconds: 100
@@ -51,7 +52,7 @@ spec:
           # ... and the MYSQL_HOST mysql.default.svc.cluster.local
           # which comes from the Service with the name mysql in the mysql.yaml file
           - name: MYSQL_HOST
-            value: mysql.lamp.svc.cluster.local
+            value: mysql.default.svc.cluster.local
         # you can replace /tmp/mysql-sakila-data-loader.sh
         # with a link to your own script in your image 
         command: ["/tmp/mysql-sakila-data-loader.sh"]

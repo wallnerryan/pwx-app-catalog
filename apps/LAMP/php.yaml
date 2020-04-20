@@ -7,7 +7,9 @@ kind: Deployment
 metadata:
   name: php-dbconnect
   labels:
+    app: php-dbconnect
     heptio.com/example: lamp
+    app-group: wordpress
 # number of PHP pods (replicas) to run
 # increase this number if you need to scale PHP horizontally
 # since we have 3, the LoadBalancer will serve our app from all 3
@@ -19,6 +21,7 @@ spec:
   selector:
     matchLabels:
       app: php-dbconnect
+      app-group: wordpress
   # the pod template describes what type of pod to create
   # when the defined number of replicas are not up
   # in this case, the pod that will be created is the one labeled app: php-dbconnect
@@ -28,6 +31,7 @@ spec:
       # and by the selector for the Service, which creates the LoadBalancer
       labels:
         app: php-dbconnect
+        app-group: wordpress
     # details of what container(s) will actually be run in this pod
     spec:
       # deploys PHP and Apache and our custom application from the specified Docker Hub image
@@ -65,7 +69,7 @@ spec:
           # ... and the MYSQL_HOST mysql.default.svc.cluster.local
           # which comes from the Service with the name mysql in the mysql.yaml file
           - name: MYSQL_HOST
-            value: mysql.lamp.svc.cluster.local
+            value: mysql.default.svc.cluster.local
         # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
         livenessProbe:
           tcpSocket:
@@ -86,6 +90,7 @@ metadata:
   name: web
   labels:
     "heptio.com/example": lamp
+    app-group: wordpress
 spec:
   ports:
   # make the service available on this port
@@ -94,6 +99,7 @@ spec:
   selector:
     # apply this service to the pod with the label app: mysql
     app: php-dbconnect
+    app-group: wordpress
   # a LoadBalancer makes this service available over the public internet
   # all of our PHP/Apache pods are load balanced behind a single public network address
 

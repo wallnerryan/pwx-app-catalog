@@ -5,24 +5,25 @@
 # if you create a persistent volume another way
 # name it "database" and make sure the cluster has access
 
-apiVersion: storage.k8s.io/v1beta1
-kind: StorageClass
-metadata:
-  name: portworx-sc-repl3
-provisioner: kubernetes.io/portworx-volume
-parameters:
-  repl: "3"
-  priority_io: "medium"
-  snap_schedule: "periodic=30,5"
-
----
+#apiVersion: storage.k8s.io/v1beta1
+#kind: StorageClass
+#metadata:
+#  name: portworx-sc-repl3
+#provisioner: kubernetes.io/portworx-volume
+#parameters:
+#  repl: "3"
+#  priority_io: "medium"
+#  snap_schedule: "periodic=30,5"
+#
+#---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: database
   annotations:
-    volume.beta.kubernetes.io/storage-class: portworx-sc-repl3
+    volume.beta.kubernetes.io/storage-class: standard
   labels:
+    app: php-dbconnect
     app-group: wordpress
     "heptio.com/example": lamp
 spec:
@@ -41,6 +42,7 @@ kind: Deployment
 metadata:
   name: mysql
   labels:
+    app: php-dbconnect
     "heptio.com/example": lamp
 spec:
   # number of MySQL pods (replicas) to run
@@ -50,7 +52,8 @@ spec:
   # make replicas of kubernetes objects with the label app: mysql
   selector:
     matchLabels:
-      app: mysql
+      app: php-dbconnect
+      app-group: wordpress
   # the pod template describes what type of pod to create
   # when the defined number of replicas are not up
   # in this case, the pod that will be created is the one labeled app: mysql
@@ -59,7 +62,8 @@ spec:
       labels:
         # this label is referenced by the selector for the Deployment, which creates pods
         # and by the selector for the Service, which exposes the pod to the cluster
-        app: mysql
+        app: php-dbconnect
+        app-group: wordpress
     # details of what container(s) will actually be run in this pod
     spec:
       containers:
@@ -139,6 +143,7 @@ metadata:
   name: mysql
   labels:
     "heptio.com/example": lamp
+    app-group: wordpress
 spec:
   # allows us to set our own internal IP to reference this pod
   # in this case we care about the port
