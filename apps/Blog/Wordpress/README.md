@@ -6,11 +6,11 @@
 
 `kubectl create secret generic mysql-pass --from-file=mysqlpasswd.txt -n wordpress`
 
-`kubectl create -f wordpress-mysql-vols.yaml`
+`kubectl create -f wordpress-mysql-vols.yaml -n wordpress`
 
-`kubectl create -f wp-mysql.yaml`
+`kubectl create -f wp-mysql.yaml -n wordpress`
 
-`kubectl create -f wordpress.yaml`
+`kubectl create -f wordpress.yaml -n wordpress`
 
 ### Inspect Elements
 
