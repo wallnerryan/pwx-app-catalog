@@ -1,3 +1,7 @@
+kind: Namespace
+metadata:
+  name: portworx
+---
 kind: StorageClass
 apiVersion: storage.k8s.io/v1beta1
 metadata:
@@ -366,7 +370,7 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: weaveworksdemos/front-end:0.3.12
+        image: wallnerryan/microservices-demo-front-end:0.4
         resources:
           requests:
             cpu: 100m
@@ -391,7 +395,7 @@ metadata:
     name: front-end
   namespace: sock-shop
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 80
     targetPort: 8079
