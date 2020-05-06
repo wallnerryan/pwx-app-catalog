@@ -1,0 +1,81 @@
+# SOURCE: https://install.portworx.com/?comp=stork&storkNonPx=true
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: stork-account
+  namespace: kube-system
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+   name: stork-role
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: stork-role-binding
+subjects:
+- kind: ServiceAccount
+  name: stork-account
+  namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: stork-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ""
+  labels:
+    tier: control-plane
+  name: stork
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      name: stork
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  replicas: 3
+  template:
+    metadata:
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+      labels:
+        name: stork
+        tier: control-plane
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "name"
+                    operator: In
+                    values:
+                    - stork
+              topologyKey: "kubernetes.io/hostname"
+      hostPID: false
+      containers:
+      - command:
+        - /stork
+        - --verbose
+        - --leader-elect=true
+        - --health-monitor-interval=120
+        image: openstorage/stork:2.4.0
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: '0.1'
+        name: stork
+      serviceAccountName: stork-account
