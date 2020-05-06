@@ -3,8 +3,8 @@ kind: ClusterConfig
 metadata:
   name: SET_CLUSTER_NAME
   region: REPLACE_REGION
-  version: "1.14"
-managedNodeGroups:
+  version: "1.15"
+nodeGroups:
   - name: storage-nodes
     instanceType: m4.xlarge
     minSize: 3

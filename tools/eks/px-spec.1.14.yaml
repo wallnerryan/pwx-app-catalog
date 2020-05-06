@@ -1,4 +1,4 @@
-# SOURCE: https://install.portworx.com/?mc=false&kbver=1.15.0&b=true&s=%22type%3Dgp2%2Csize%3D150%22&kd=type%3Dgp2%2Csize%3D150&c=px-cluster-fd8624c3-1e68-46ed-8f2d-975a2acd0784&eks=true&stork=true&lh=true&st=k8s
+# SOURCE: https://install.portworx.com/?mc=false&kbver=1.14.0&b=true&s=%22type%3Dgp2%2Csize%3D150%22&kd=type%3Dgp2%2Csize%3D150&c=px-cluster-fd8624c3-1e68-46ed-8f2d-975a2acd0784&eks=true&stork=true&lh=true&st=k8s
 ---
 kind: Service
 apiVersion: v1
@@ -50,7 +50,6 @@ spec:
     shortNames:
     - vps
     - vp
-  preserveUnknownFields: false
   validation:
     openAPIV3Schema:
       type: object
@@ -308,7 +307,7 @@ metadata:
   labels:
     name: portworx
   annotations:
-    portworx.com/install-source: "https://install.portworx.com/?mc=false&kbver=1.15.0&b=true&s=%22type%3Dgp2%2Csize%3D150%22&kd=type%3Dgp2%2Csize%3D150&c=px-cluster-fd8624c3-1e68-46ed-8f2d-975a2acd0784&eks=true&stork=true&lh=true&st=k8s"
+    portworx.com/install-source: "https://install.portworx.com/?mc=false&kbver=1.14.0&b=true&s=%22type%3Dgp2%2Csize%3D150%22&kd=type%3Dgp2%2Csize%3D150&c=px-cluster-fd8624c3-1e68-46ed-8f2d-975a2acd0784&eks=true&stork=true&lh=true&st=k8s"
 spec:
   selector:
     matchLabels:
@@ -511,6 +510,30 @@ spec:
       serviceAccountName: px-account
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stork-config
+  namespace: kube-system
+data:
+  policy.cfg: |-
+    {
+      "kind": "Policy",
+      "apiVersion": "v1",
+      "extenders": [
+        {
+          "urlPrefix": "http://stork-service.kube-system:8099",
+          "apiVersion": "v1beta1",
+          "filterVerb": "filter",
+          "prioritizeVerb": "prioritize",
+          "weight": 5,
+          "enableHttps": false,
+          "nodeCacheCapable": false,
+          "httpTimeout": 300000000000
+        }
+      ]
+    }
+---
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: stork-account
@@ -537,6 +560,19 @@ roleRef:
   kind: ClusterRole
   name: stork-role
   apiGroup: rbac.authorization.k8s.io
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: stork-service
+  namespace: kube-system
+spec:
+  selector:
+    name: stork
+  ports:
+    - protocol: TCP
+      port: 8099
+      targetPort: 8099
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -583,7 +619,7 @@ spec:
         - --verbose
         - --leader-elect=true
         - --health-monitor-interval=120
-        image: openstorage/stork:2.4.0
+        image: openstorage/stork:2.4.0-rc1
         imagePullPolicy: Always
         env:
         - name: "PX_SERVICE_NAME"
@@ -599,43 +635,6 @@ apiVersion: storage.k8s.io/v1
 metadata:
   name: stork-snapshot-sc
 provisioner: stork-snapshot
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: stork-service
-  namespace: kube-system
-spec:
-  selector:
-    name: stork
-  ports:
-    - protocol: TCP
-      port: 8099
-      targetPort: 8099
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: stork-config
-  namespace: kube-system
-data:
-  policy.cfg: |-
-    {
-      "kind": "Policy",
-      "apiVersion": "v1",
-      "extenders": [
-        {
-          "urlPrefix": "http://stork-service.kube-system:8099",
-          "apiVersion": "v1beta1",
-          "filterVerb": "filter",
-          "prioritizeVerb": "prioritize",
-          "weight": 5,
-          "enableHttps": false,
-          "nodeCacheCapable": false,
-          "httpTimeout": 300000000000
-        }
-      ]
-    }
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -750,7 +749,7 @@ spec:
           - --policy-configmap=stork-config
           - --policy-configmap-namespace=kube-system
           - --lock-object-name=stork-scheduler
-          image: gcr.io/google_containers/kube-scheduler-amd64:v1.15.0
+          image: gcr.io/google_containers/kube-scheduler-amd64:v1.14.0
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -877,7 +876,7 @@ spec:
         - --controllers=persistentvolume-binder,persistentvolume-expander
         - --use-service-account-credentials=true
         - --leader-elect-resource-lock=configmaps
-        image: gcr.io/google_containers/kube-controller-manager-amd64:v1.15.0
+        image: gcr.io/google_containers/kube-controller-manager-amd64:v1.14.0
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 8
