@@ -1,3 +1,4 @@
+# stork spec for EKS for non-PX clusters
 # SOURCE: https://install.portworx.com/?comp=stork&storkNonPx=true
 ---
 apiVersion: v1
