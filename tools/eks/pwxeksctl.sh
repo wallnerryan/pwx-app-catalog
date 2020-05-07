@@ -74,6 +74,11 @@ function install_portworx() {
     kubectl apply -f px-spec.yaml
 }
 
+function install_nopx_stork() {
+    echo "Deplpoying stork...."
+    kubectl apply -f stork-spec.yaml
+}
+
 function get_pwx_status() {
     PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
     until kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl status | grep "PX is operational"
@@ -161,6 +166,7 @@ function get_help() {
     echo "-j|--install-helm         (OPTIONAL: Install Helm CLI tools"
     echo "--nopx                    (OPTIONAL: Do not install Portworx, just setup EKS)"
     echo "--installpxc              (OPTIONAL: Install Portworx Central. [includes PX])"
+    echo "--install-stork           (OPTIONAL: Install Stork on Non-PX clusters for PX-Backup)"
     echo "--macos                   (OPTIONAL: Running on macosx, not linux.)"
     echo 
     echo "Provide a px-spec or edit current one at px-spec.yaml for Portworx Customization"
@@ -191,6 +197,7 @@ INSTALL_HELM="false"
 MACOSX="false"
 PWX="true"
 PWX_CENTRAL="false"
+INSTALL_STORK="false"
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -201,6 +208,10 @@ case $key in
     ;;
     -s|--stand-alone-command)
     NO_CREATE_OR_DESTROY="true"
+    shift # past argument
+    ;;
+    --install-stork)
+    INSTALL_STORK="true"
     shift # past argument
     ;;
     -c|--create)
@@ -266,6 +277,7 @@ echo "INSTALL HELM          = ${INSTALL_HELM}"
 echo "MACOSX                = ${MACOSX} (only needed for helm install, otherwise ignored)"
 echo "INSTALL PWX?          = ${PWX}"
 echo "INSTALL PWX CENTRAL?  = ${PWX_CENTRAL}"
+echo "INSTALL STORK?        = ${INSTALL_STORK}"
 echo 
 read -p "Continue.. y/n?" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
@@ -342,6 +354,12 @@ if [[ ! -z $CREATE ]] && [[ $CREATE == "true" ]]; then
         echo -e "${GREEN}Done${NC}"
     else
         echo -e "${YELLOW}Skipping Portworx Install......${NC}"
+        if [[ $INSTALL_STORK == "true" ]]; then
+            echo -n "Installing Stork on non-PX EKS cluster......"
+            echo
+            install_nopx_stork
+            echo -e "${GREEN}Done${NC}"
+        fi
     fi
     if [[ $PWX_CENTRAL == "true" ]]; then
         echo -n "Installing Portworx Central on the EKS cluster......"

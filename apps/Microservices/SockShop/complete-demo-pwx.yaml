@@ -370,7 +370,7 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: wallnerryan/microservices-demo-front-end:0.4
+        image: wallnerryan/microservices-demo-front-end:0.5
         resources:
           requests:
             cpu: 100m
