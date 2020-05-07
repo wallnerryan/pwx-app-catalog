@@ -267,17 +267,17 @@ if [[ ! -z $DESTROY ]] && [[ $DESTROY == "true" ]]; then
 fi
 
 echo 
-echo "CREATE                = ${CREATE}"
-echo "DESTROY               = ${DESTROY}"
-echo "RUN COMMAND           = ${NO_CREATE_OR_DESTROY}"
-echo "CLUSTER_NAME          = ${CLUSTER_NAME}"
-echo "REGION                = ${REGION}"
-echo "AWS ROLE NAME         = ${PWX_ROLE_NAME}"
-echo "INSTALL HELM          = ${INSTALL_HELM}"
-echo "MACOSX                = ${MACOSX} (only needed for helm install, otherwise ignored)"
-echo "INSTALL PWX?          = ${PWX}"
-echo "INSTALL PWX CENTRAL?  = ${PWX_CENTRAL}"
-echo "INSTALL STORK?        = ${INSTALL_STORK}"
+echo "CREATE                     = ${CREATE}"
+echo "DESTROY                    = ${DESTROY}"
+echo "RUN COMMAND                = ${NO_CREATE_OR_DESTROY}"
+echo "CLUSTER_NAME               = ${CLUSTER_NAME}"
+echo "REGION                     = ${REGION}"
+echo "AWS ROLE NAME              = ${PWX_ROLE_NAME}"
+echo "INSTALL HELM               = ${INSTALL_HELM}"
+echo "MACOSX                     = ${MACOSX} (only needed for helm install, otherwise ignored)"
+echo "INSTALL PWX?               = ${PWX}"
+echo "INSTALL PWX CENTRAL?       = ${PWX_CENTRAL}"
+echo "INSTALL STORK for NON-PX?  = ${INSTALL_STORK}"
 echo 
 read -p "Continue.. y/n?" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
