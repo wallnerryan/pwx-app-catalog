@@ -348,9 +348,11 @@ if [[ ! -z $CREATE ]] && [[ $CREATE == "true" ]]; then
         echo -e "${GREEN}Done${NC}"
         echo -n "Exposing Ports......"
         echo
-        expose_grafana
-        expose_prometheus
-        expose_lighthouse
+        # Need to fix if PX spec doesnt add monitoring
+        # to timeouot on exposing the service.
+        #expose_grafana
+        #expose_prometheus
+        #expose_lighthouse
         echo -e "${GREEN}Done${NC}"
     else
         echo -e "${YELLOW}Skipping Portworx Install......${NC}"
@@ -427,9 +429,11 @@ if [[ ! -z $NO_CREATE_OR_DESTROY ]] && [[ $NO_CREATE_OR_DESTROY == "true" ]]; th
         echo -e "${GREEN}Done${NC}"
         echo -n "Exposing Ports......"
         echo
-        expose_grafana
-        expose_prometheus
-        expose_lighthouse
+        # Need to fix if PX spec doesnt add monitoring
+        # to timeouot on exposing the service.
+        #expose_grafana
+        #expose_prometheus
+        #expose_lighthouse
         echo -e "${GREEN}Done${NC}"
     else: 
         echo -e "${YELLOW}Skipping Portworx Install......${NC}"
