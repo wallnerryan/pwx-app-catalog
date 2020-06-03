@@ -14,6 +14,10 @@ openssl x509 -req -in jane.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out jan
 kubectl config set-credentials jane --client-certificate=/full/path/to/jane.crt  --client-key=/full/path/to/jane.key
 kubectl config set-context jane-context --cluster=cluster.local --namespace=middleware --user=jane
 
+# (needed for PX-Backup)
+kubectl create -f deployment-cluster-role-binding-namespace-reader.yaml
+kubectl create -f  deployment-cluster-role-namespace-reader.yaml
+
 # Create role and binding
 kubectl create -f deployment-role-middleware.yaml
 kubectl create -f role-binding-jane.yaml
