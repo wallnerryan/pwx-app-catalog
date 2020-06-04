@@ -6,7 +6,7 @@ metadata:
 rules:
 - apiGroups: ["", "extensions", "apps", "rbac.authorization.k8s.io", "networking.k8s.io", "batch"]
   resources: ["deployments", "replicasets", "pods", "services", "roles", "rolebindings", "*"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"] # You can also use ["*"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 - apiGroups: [""]
   resources: ["namespaces"]
   verbs: ["get", "list"]

@@ -3,6 +3,31 @@ kind: ClusterRole
 metadata:
  name: namespace-reader
 rules:
- - apiGroups: ["*"]
-   resources: ["namespaces", "clusterroles", "clusterrolebindings", "persistentvolumes"]
-   verbs: ["get", "watch", "list"]
+- apiGroups: ["*"]
+  resources: ["namespaces", "clusterroles", "clusterrolebindings", "persistentvolumes"]
+  verbs: ["get", "watch", "list"]
+- apiGroups:
+  - "*"
+  resources:
+  - namespaces
+  - clusterrolebindings
+  - persistentvolumes
+  - clusterroles
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+- apiGroups:
+  - stork.libopenstorage.org
+  resources:
+  - "*"
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
