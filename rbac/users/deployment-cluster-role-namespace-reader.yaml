@@ -3,6 +3,6 @@ kind: ClusterRole
 metadata:
  name: namespace-reader
 rules:
- - apiGroups: [""]
-   resources: ["namespaces"]
+ - apiGroups: ["*"]
+   resources: ["namespaces", "clusterroles", "clusterrolebindings", "persistentvolumes"]
    verbs: ["get", "watch", "list"]
