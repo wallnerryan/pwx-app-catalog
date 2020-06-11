@@ -4,26 +4,18 @@
 ## Pre-Reqs
 
 1. Portworx Installed
-2. Prometheues Monitoring selected during Portworx Install
+2. Prometheues Monitoring selected during Portworx Install (via https://central.portworx.com)
 
 ## Install
 
-1. edit helm_options.yaml and update 
+1. edit `helm_options.yaml` and update 
 
-```
-global.hosts.externalIP
-global.hosts.domain
-certmanager-issuer.email
-nginx-ingress: *
-```
-
-2. `sh install-gitlab.sh`
-
+2. `sh install-gitlab.sh` (This will install and configure Portworx for Gitlab)
 
 ## Install Gitlab Runner
 
-1. Navigate to https://gitlab.example.com:<NodePort_IfUsing>/admin/runners
-2. Update gitlab-runner.yaml
+1. Navigate to `https://gitlab.example.com:<NodePort_IfUsing>/admin/runners`
+2. Update `gitlab-runner.yaml`
 
 Update the NodePort to  and `runnerRegistrationToken`
 ```
