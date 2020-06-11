@@ -1,6 +1,25 @@
 
 # Gitlab Install with Portworx for Persistence
 
+## What is Gitlab
+
+GitLab is a complete DevOps platform, delivered as a single application
+
+GitLab has the following Stateful Components
+
+- Gitaly (persists the Git repositories)
+- PostgreSQL (persists the GitLab database data)
+- Redis (persists GitLab job data)
+- MinIO (persists the object storage data)
+
+### Easily manage these with Portworx
+
+Gitlab does not provide management aroud storage changed. *portworx does*
+
+Let Portworx automatically manage replication, capacity management and backup & restore for Gitlab.
+
+# Install Gitlab with Portworx Data Managment
+
 ## Pre-Reqs
 
 1. Portworx Installed
