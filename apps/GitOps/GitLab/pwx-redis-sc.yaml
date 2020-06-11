@@ -1,0 +1,11 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+    name: pwx-redis-sc
+provisioner: kubernetes.io/portworx-volume
+parameters:
+   repl: "1"
+   io_priority: "high"
+   snap_schedule: "periodic=60,4"
+allowVolumeExpansion: true
+reclaimPolicy: Retain

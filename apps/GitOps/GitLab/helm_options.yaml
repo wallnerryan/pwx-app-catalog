@@ -1,0 +1,37 @@
+gitlab:
+  gitaly:
+    persistence:
+      storageClass: pwx-gitaly-sc
+      size: 50Gi
+postgresql:
+  persistence:
+    storageClass: pwx-postgresql-sc
+    size: 8Gi
+minio:
+  persistence:
+    storageClass: pwx-minio-sc
+    size: 10Gi
+redis:
+  master:
+    persistence:
+      storageClass: pwx-redis-sc
+      size: 5Gi
+prometheus:
+  server:
+    persistentVolume:
+       storageClass: pwx-prometheus-sc
+nginx-ingress:
+  controller:
+    service:
+      type: NodePort
+global:
+  hosts:
+    https: false
+    domain: example.com
+    externalIP: 70.0.89.147
+  operator:
+    enabled: true
+certmanager-issuer:
+    email: admin@example.com
+gitlab-runner:
+  install: false

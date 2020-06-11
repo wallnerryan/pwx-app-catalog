@@ -1,0 +1,12 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+    name: pwx-postgresql-sc
+provisioner: kubernetes.io/portworx-volume
+parameters:
+   repl: "3"
+   io_profile: "db"
+   io_priority: "high"
+   snap_schedule: "daily=12:00,2"
+allowVolumeExpansion: true
+reclaimPolicy: Retain

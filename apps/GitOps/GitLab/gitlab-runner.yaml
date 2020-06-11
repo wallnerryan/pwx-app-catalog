@@ -1,0 +1,32 @@
+imagePullPolicy: IfNotPresent
+gitlabUrl: http://gitlab-webservice:8080/
+runnerRegistrationToken: "TmZ7Gph4pc-mBJGQs1x4"
+terminationGracePeriodSeconds: 3600
+concurrent: 10
+checkInterval: 30
+rbac:
+  create: false
+  clusterWideAccess: false
+metrics:
+  enabled: true
+runners:
+  ## Default container image to use for builds when none is specified
+  ##
+  image: ubuntu:16.04
+  privileged: false
+  pollTimeout: 180
+  outputLimit: 4096
+  cache: {}
+  builds: {}
+  services: {}
+  helpers: {}
+securityContext:
+  fsGroup: 65533
+  runAsUser: 100
+resources: {}
+affinity: {}
+nodeSelector: {}
+tolerations: []
+podAnnotations: {}
+podLabels: {}
+

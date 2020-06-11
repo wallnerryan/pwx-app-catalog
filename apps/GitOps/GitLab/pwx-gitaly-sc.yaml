@@ -1,0 +1,12 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+    name: pwx-gitaly-sc
+provisioner: kubernetes.io/portworx-volume
+parameters:
+   repl: "3"
+   io_profile: "random"
+   io_priority: "high"
+   group: "gitaly"
+allowVolumeExpansion: true
+reclaimPolicy: Retain
