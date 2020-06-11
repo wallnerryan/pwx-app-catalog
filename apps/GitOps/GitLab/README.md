@@ -128,4 +128,4 @@ Events:     <none>
 
 ## Usiing PX-Backup to Backup and Restore Gitlab
 
-![alt text](gitlab-backuprestore.png?raw=true "Gitlab-Portworx-Backup)
+![Alt text](gitlab-backuprestore.png?raw=true "Gitlab-Portworx-Backup")
