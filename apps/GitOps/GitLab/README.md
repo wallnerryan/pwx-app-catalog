@@ -96,47 +96,20 @@ prometheus-auto-volume-resize   102m
 redis-auto-volume-resize        102m
 ```
 
+View that the state of the rules are `Normal`
 ```
-$ kubectl describe autopilotrule postgresql-auto-volume-resize
-Name:         postgresql-auto-volume-resize
-Namespace:
-Labels:       <none>
-Annotations:  <none>
-API Version:  autopilot.libopenstorage.org/v1alpha1
-Kind:         AutopilotRule
-Metadata:
-  Creation Timestamp:  2020-06-11T18:25:28Z
-  Finalizers:
-    autopilot.libopenstorage.org/delete
-  Generation:        2
-  Resource Version:  281692
-  Self Link:         /apis/autopilot.libopenstorage.org/v1alpha1/autopilotrules/postgresql-auto-volume-resize
-  UID:               5b277072-32fc-4412-93c6-ffe673702a26
-Spec:
-  Actions:
-    Name:  openstorage.io.action.volume/resize
-    Params:
-      Scalepercentage:  200
-  Conditions:
-    Expressions:
-      Key:       100 * (px_volume_usage_bytes / px_volume_capacity_bytes)
-      Operator:  Gt
-      Values:
-        20
-      Key:       px_volume_capacity_bytes / 1000000000
-      Operator:  Lt
-      Values:
-        20
-    Provider:  prometheus
-    Type:      monitoring
-  Namespace Selector:
-  Poll Interval:  10
-  Selector:
-    Match Labels:
-      App:  postgresql
-Events:     <none>
+$ kubectl get events --field-selector involvedObject.kind=AutopilotRule --all-namespaces
+NAMESPACE   LAST SEEN   TYPE     REASON       OBJECT                                        MESSAGE
+default     19s         Normal   Transition   autopilotrule/gitaly-auto-volume-resize       rule: gitaly-auto-volume-resize:pvc-ce67fc45-7de6-4ba5-8938-da6b2be6fd43 transition from Initializing => Normal
+default     14s         Normal   Transition   autopilotrule/minio-auto-volume-resize        rule: minio-auto-volume-resize:pvc-b0e6d232-76ec-4b37-a4af-75d6990a6c1f transition from Initializing => Normal
+default     10s         Normal   Transition   autopilotrule/postgresql-auto-volume-resize   rule: postgresql-auto-volume-resize:pvc-bfee5794-eded-4ed8-822c-048b348eda07 transition from Initializing => Normal
+default     4s          Normal   Transition   autopilotrule/prometheus-auto-volume-resize   rule: prometheus-auto-volume-resize:pvc-3eb1508b-0f1d-4030-a389-4e4c1d3d8449 transition from Initializing => Normal
+default     3s          Normal   Transition   autopilotrule/redis-auto-volume-resize        rule: redis-auto-volume-resize:pvc-63febd2d-01aa-42cc-a7a3-ba5a600fedbb transition from Initializing => Normal
 ```
+
+These rules are setup such that if the volume has `less than 20%` of the capacity left it will `grow the volume by 200%`
 
 ## Usiing PX-Backup to Backup and Restore Gitlab
 
 ![Alt text](gitlab-backuprestore.png?raw=true "Gitlab-Portworx-Backup")
+
