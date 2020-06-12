@@ -14,7 +14,7 @@ GitLab has the following Stateful Components
 
 ### Easily manage these with Portworx
 
-Gitlab does not provide management aroud storage changed. *portworx does*
+Gitlab does not provide management around storage changes such as capacity and movement. *portworx does*
 
 Let Portworx automatically manage replication, capacity management and backup & restore for Gitlab.
 
