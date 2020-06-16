@@ -77,7 +77,12 @@ ID            NAME                        SIZE    HA    SHARED    ENCRYPTED    I
 ```
 $ pxctl v l -s
 ID            NAME                                    SIZE    HA    SHARED    ENCRYPTED    IO_PRIORITY    STATUS        SNAP-ENABLED
-532007626620611155    pvc-63febd2d-01aa-42cc-a7a3-ba5a600fedbb_periodic_2020_Jun_11_19_29    5 GiB    1    no    no        HIGH        up - detached    no
+341211473088135507    pvc-3eb1508b-0f1d-4030-a389-4e4c1d3d8449_daily_2020_Jun_12_12_00    8 GiB    2    no    no        HIGH        up - detached    no
+327272098153801489    pvc-63febd2d-01aa-42cc-a7a3-ba5a600fedbb_periodic_2020_Jun_12_16_08    5 GiB    1    no    no        HIGH        up - detached    no
+86941070146763390    pvc-63febd2d-01aa-42cc-a7a3-ba5a600fedbb_periodic_2020_Jun_12_17_08    5 GiB    1    no    no        HIGH        up - detached    no
+858702785584689017    pvc-63febd2d-01aa-42cc-a7a3-ba5a600fedbb_periodic_2020_Jun_12_18_08    5 GiB    1    no    no        HIGH        up - detached    no
+4811708558282678    pvc-63febd2d-01aa-42cc-a7a3-ba5a600fedbb_periodic_2020_Jun_12_19_08    5 GiB    1    no    no        HIGH        up - detached    no
+952069476450457085    pvc-bfee5794-eded-4ed8-822c-048b348eda07_daily_2020_Jun_12_12_00    8 GiB    3    no    no        HIGH        up - detached    no
 ```
 
 ##  Understanding Portworx AutoPilot Rules for Capacity Management
