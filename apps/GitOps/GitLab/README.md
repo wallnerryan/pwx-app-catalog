@@ -133,7 +133,7 @@ create database pxdemo;
 ```
 
 ```
-pgbench -U postgres  -i -s 50 pxdemo
+pgbench -U postgres  -i -s 600 pxdemo
 Password:
 dropping old tables...
 NOTICE:  table "pgbench_accounts" does not exist, skipping
@@ -160,7 +160,8 @@ Observe
 
 ```
 PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
-watch "kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl v i <postgres-VOLID>"
+kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl v l
+watch "kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl v i <postgres-PX-VOL-ID>"
 ```
 
 ```
