@@ -7,17 +7,11 @@ spec:
     matchLabels:
       app: prometheus
   conditions:
-    # volume usage should be less than 20%
     expressions:
     - key: "100 * (px_volume_usage_bytes / px_volume_capacity_bytes)"
       operator: Gt
       values:
-        - "20"
-    # volume capacity should not exceed 400GiB
-    - key: "px_volume_capacity_bytes / 1000000000"
-      operator: Lt
-      values:
-       - "20"
+        - "60"
   actions:
   - name: openstorage.io.action.volume/resize
     params:
