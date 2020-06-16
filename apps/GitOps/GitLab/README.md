@@ -114,6 +114,60 @@ default     3s          Normal   Transition   autopilotrule/redis-auto-volume-re
 
 These rules are setup such that if the volume has `less than 20%` of the capacity left it will `grow the volume by 200%`
 
+### To test capacity management
+
+```
+kubectl exec -it gitlab-postgresql-0 bash
+```
+
+(Password is `postgresql-password` in `kubectl get secret gitlab-postgresql-password  -o yaml`)
+use `echo <string> |  base64 -d` to decode
+```
+ psql -U postgres
+```
+
+```
+create database pxdemo;
+\l
+\q
+```
+
+```
+pgbench -U postgres  -i -s 50 pxdemo
+Password:
+dropping old tables...
+NOTICE:  table "pgbench_accounts" does not exist, skipping
+NOTICE:  table "pgbench_branches" does not exist, skipping
+NOTICE:  table "pgbench_history" does not exist, skipping
+NOTICE:  table "pgbench_tellers" does not exist, skipping
+creating tables...
+generating data...
+100000 of 5000000 tuples (2%) done (elapsed 0.55 s, remaining 27.09 s)
+200000 of 5000000 tuples (4%) done (elapsed 1.54 s, remaining 36.90 s)
+300000 of 5000000 tuples (6%) done (elapsed 2.89 s, remaining 45.22 s)
+400000 of 5000000 tuples (8%) done (elapsed 3.61 s, remaining 41.49 s)
+500000 of 5000000 tuples (10%) done (elapsed 4.74 s, remaining 42.69 s)
+600000 of 5000000 tuples (12%) done (elapsed 5.98 s, remaining 43.83 s)
+700000 of 5000000 tuples (14%) done (elapsed 6.77 s, remaining 41.58 s)
+800000 of 5000000 tuples (16%) done (elapsed 8.09 s, remaining 42.49 s)
+900000 of 5000000 tuples (18%) done (elapsed 9.54 s, remaining 43.46 s)
+1000000 of 5000000 tuples (20%) done (elapsed 10.42 s, remaining 41.69 s)
+1100000 of 5000000 tuples (22%) done (elapsed 11.48 s, remaining 40.71 s)
+1200000 of 5000000 tuples (24%) done (elapsed 12.85 s, remaining 40.70 s)
+```
+
+Observe
+
+```
+PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
+watch "kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl v i <postgres-VOLID>"
+```
+
+```
+watch kubectl get events --field-selector involvedObject.kind=AutopilotRule --all-namespaces
+kubectl get pvc
+```
+
 ## Usiing PX-Backup to Backup and Restore Gitlab
 
 ![Alt text](gitlab-backuprestore.png?raw=true "Gitlab-Portworx-Backup")
