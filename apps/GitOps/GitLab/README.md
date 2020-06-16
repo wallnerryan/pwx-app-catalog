@@ -112,7 +112,7 @@ default     4s          Normal   Transition   autopilotrule/prometheus-auto-volu
 default     3s          Normal   Transition   autopilotrule/redis-auto-volume-resize        rule: redis-auto-volume-resize:pvc-63febd2d-01aa-42cc-a7a3-ba5a600fedbb transition from Initializing => Normal
 ```
 
-These rules are setup such that if the volume has `less than 20%` of the capacity left it will `grow the volume by 200%`
+For example, these rules can be setup such that if the volume has `less than 20%` of the capacity left it will `grow the volume by 200%`
 
 ### To test capacity management
 
