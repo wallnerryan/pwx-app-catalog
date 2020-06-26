@@ -4,6 +4,7 @@ metadata:
   name: wordpress-mysql
   labels:
     app: mysql
+    applicationgroup: wordpress-mysql
 spec:
   ports:
     - port: 3306
@@ -16,6 +17,7 @@ metadata:
   name: wordpress-mysql
   labels:
     app: mysql
+    applicationgroup: wordpress-mysql
 spec:
   strategy:
     type: Recreate
@@ -28,6 +30,7 @@ spec:
       labels:
         app: mysql
         name: "mysql"
+        applicationgoup: wordpress-mysql
     spec:
       # Use the stork scheduler to enable more efficient placement of the pods
       schedulerName: stork

@@ -4,12 +4,14 @@ metadata:
   name: wordpress
   labels:
     app: wordpress
+    applicationgroup: wordpress-mysql
 spec:
   ports:
     - port: 80
   selector:
     app: wordpress
     tier: frontend
+    applicationgroup: wordpress-mysql
   type: NodePort
 ---
 apiVersion: apps/v1
@@ -19,6 +21,7 @@ metadata:
   labels:
     app: wordpress
     tier: frontend
+    applicationgroup: wordpress-mysql
 spec:
   replicas: 3
   strategy:
@@ -32,6 +35,7 @@ spec:
       labels:
         app: wordpress
         tier: frontend
+        applicationgroup: wordpress-mysql
     spec:
       # Use the stork scheduler to enable more efficient placement of the pods
       schedulerName: stork
@@ -41,7 +45,7 @@ spec:
         imagePullPolicy: 
         env:
         - name: WORDPRESS_DB_HOST
-          value: wordpress-mysql.wordpress.svc.cluster.local
+          value: wordpress-mysql.demo-ns-1.svc.cluster.local
         - name: WORDPRESS_DB_PASSWORD
           valueFrom:
             secretKeyRef:
