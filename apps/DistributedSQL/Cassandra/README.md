@@ -26,7 +26,16 @@ select * from emp;
 Inset some data
 ```
 INSERT INTO emp (emp_id, emp_name, emp_city,
-    emp_phone, emp_sal) VALUES(1,'Joe', 'Detriot', 9846022338, 60000);
+    emp_phone, emp_sal) VALUES(2,'Joe', 'Detriot', 9846022338, 60000);
+    
+INSERT INTO emp (emp_id, emp_name, emp_city,
+    emp_phone, emp_sal) VALUES(3,'Jane', 'Seattle', 9846022338, 90000);
+    
+INSERT INTO emp (emp_id, emp_name, emp_city,
+    emp_phone, emp_sal) VALUES(4,'Mary', 'Seattle', 9877840098, 100000);
+
+INSERT INTO emp (emp_id, emp_name, emp_city,
+    emp_phone, emp_sal) VALUES(4,'Sarah', 'Boston', 2549880091, 76000);
 
 select * from emp;
 ```
