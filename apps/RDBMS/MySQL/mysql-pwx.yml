@@ -36,6 +36,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
+  labels: 
+    app: mysql
 spec:
   replicas: 1
   selector:
