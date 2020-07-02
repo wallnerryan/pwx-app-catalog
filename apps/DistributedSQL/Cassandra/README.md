@@ -46,3 +46,20 @@ kubectl run -i --tty --restart=Never --rm --image mikewright/cqlsh cqlsh cassand
 
 use newkeyspace; select * from emp;
 ```
+
+## Pre and Post Hook Rules for PX-Backup
+
+### Pre
+```
+nodetool flush
+# or
+nodetool flush -- <keyspace>
+```
+
+### Post
+```
+nodetool verify
+# or 
+nodetool verify -- <keyspace>
+```
+
