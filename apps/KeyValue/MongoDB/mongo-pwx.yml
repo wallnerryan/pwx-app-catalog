@@ -69,7 +69,6 @@ spec:
            - mongod
            - "--replSet"
            - rs0
-           - "--noprealloc"
            - "--bind_ip_all"
          ports:
            - containerPort: 27017
