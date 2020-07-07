@@ -3,6 +3,8 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   name: default-view
+  labels:
+    app: mongo
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16,6 +18,8 @@ kind: StorageClass
 apiVersion: storage.k8s.io/v1beta1
 metadata:
     name: mongo-pwx-storage-class
+    labels:
+      app: mongo
 provisioner: kubernetes.io/portworx-volume
 parameters:
    repl: "3"
@@ -27,6 +31,7 @@ metadata:
  name: mongo
  labels:
    name: mongo
+   app: mongo
 spec:
  ports:
  - port: 27017
