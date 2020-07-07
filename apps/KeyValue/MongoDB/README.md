@@ -1,8 +1,11 @@
 ## MongoDB with Portworx
 
 ```
-kubectl create -f mongo-pwx.ym [-n <namespace>]
+kubectl create ns mongo-1
+kubectl create -f mongo-pwx.ym -n mongo-1
 ```
+
+> If you want to use different NS, update the ClusterRoleBinding namespace
 
 ## Example Data
 
