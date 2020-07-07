@@ -53,48 +53,6 @@ mongo --eval "printjson(db.fsyncUnlock())"
 List mongo replset
 ```
 rs0:PRIMARY> db.runCommand( { isMaster: 1 } )
-{
-	"hosts" : [
-		"10.233.105.61:27017",
-		"10.233.105.32:27017",
-		"10.233.105.225:27017"
-	],
-	"setName" : "rs0",
-	"setVersion" : 5,
-	"ismaster" : true,
-	"secondary" : false,
-	"primary" : "10.233.105.61:27017",
-	"me" : "10.233.105.61:27017",
-	"electionId" : ObjectId("7fffffff0000000000000001"),
-	"lastWrite" : {
-		"opTime" : {
-			"ts" : Timestamp(1594149132, 1),
-			"t" : NumberLong(1)
-		},
-		"lastWriteDate" : ISODate("2020-07-07T19:12:12Z"),
-		"majorityOpTime" : {
-			"ts" : Timestamp(1594149132, 1),
-			"t" : NumberLong(1)
-		},
-		"majorityWriteDate" : ISODate("2020-07-07T19:12:12Z")
-	},
-	"maxBsonObjectSize" : 16777216,
-	"maxMessageSizeBytes" : 48000000,
-	"maxWriteBatchSize" : 100000,
-	"localTime" : ISODate("2020-07-07T19:12:21.985Z"),
-	"logicalSessionTimeoutMinutes" : 30,
-	"connectionId" : 79,
-	"minWireVersion" : 0,
-	"maxWireVersion" : 8,
-	"readOnly" : false,
-	"ok" : 1,
-	"$clusterTime" : {
-		"clusterTime" : Timestamp(1594149132, 1),
-		"signature" : {
-			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
-			"keyId" : NumberLong(0)
-		}
-	},
-	"operationTime" : Timestamp(1594149132, 1)
-}
+
+rs0:PRIMARY> rs.conf()
 ```
