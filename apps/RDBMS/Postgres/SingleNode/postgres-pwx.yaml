@@ -54,7 +54,7 @@ spec:
     spec:
       schedulerName: stork
       containers:
-      - image: "postgres:10.1"
+      - image: "postgres:12.3"
         name: postgres
         envFrom:
         - configMapRef:
