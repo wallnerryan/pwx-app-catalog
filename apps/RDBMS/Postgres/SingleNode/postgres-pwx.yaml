@@ -13,9 +13,10 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
    name: postgres-data
-   annotations:
-     volume.beta.kubernetes.io/storage-class: px-postgres-sc
+   labels:
+     app: postgres
 spec:
+   storageClassName: px-postgres-sc
    accessModes:
      - ReadWriteOnce
    resources:
@@ -28,19 +29,24 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: example-config
+  labels:
+     app: postgres
 data:
   EXAMPLE_DB_HOST: postgres://postgres@postgres/example?sslmode=disable
   EXAMPLE_DB_KIND: postgres
   PGDATA: /var/lib/postgresql/data/pgdata
   POSTGRES_USER: postgres
-
+  POSTGRES_PASSWORD: admin123
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
 spec:
+  selector:
+    matchLabels:
+      app: postgres
   template:
     metadata:
       labels:
