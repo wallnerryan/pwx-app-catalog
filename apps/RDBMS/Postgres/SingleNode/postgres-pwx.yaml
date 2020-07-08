@@ -26,6 +26,18 @@ spec:
 
 
 apiVersion: v1
+kind: Secret
+metadata:
+  name: database-secret-config
+type: Opaque
+data:
+  # user
+  username: dXNlcg==
+  # mysecretpassword
+  password: bXlzZWNyZXRwYXNzd29yZA==
+---
+
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: example-config
@@ -35,8 +47,6 @@ data:
   EXAMPLE_DB_HOST: postgres://postgres@postgres/example?sslmode=disable
   EXAMPLE_DB_KIND: postgres
   PGDATA: /var/lib/postgresql/data/pgdata
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: admin123
 ---
 
 apiVersion: apps/v1
@@ -59,6 +69,17 @@ spec:
         envFrom:
         - configMapRef:
             name: example-config
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: database-secret-config
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-secret-config
+              key: password
         ports:
         - containerPort: 5432
           name: postgres
