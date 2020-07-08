@@ -9,6 +9,10 @@ kubectl create -f postgres-pwx.yaml
 ```
 psql -c "create database test;"
 
+(or) 
+
+\c test;
+
 psql test -c "
 create table posts (
   id integer,
