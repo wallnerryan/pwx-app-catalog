@@ -121,3 +121,9 @@ cd ../
 rm -rf postgres-operator/
 ```
 
+## PX-Backup Pre-Backup Rule
+
+Use `cluster-name=pwx-pg-cluster` as the label to target the Master and 2 Slaves
+```
+PGPASSWORD=$PGPASSWORD_SUPERUSER psql -U postgres -c "CHECKPOINT";
+```
