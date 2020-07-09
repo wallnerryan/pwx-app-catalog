@@ -195,5 +195,17 @@ kubectl get pvc
 
 ## Usiing PX-Backup to Backup and Restore Gitlab
 
+Select Gitlab Namespace
 ![Alt text](gitlab-backuprestore.png?raw=true "Gitlab-Portworx-Backup")
 
+Start the backup 
+![Alt text](startbackup.png?raw=true "Gitlab-Portworx-Backup-2")
+
+View backup
+![Alt text](backup.png?raw=true "Gitlab-Portworx-Backup-3")
+
+Get backup details
+![Alt text](details.png?raw=true "Gitlab-Portworx-Backup-4")
+
+Restore
+![Alt text](restore.png?raw=true "Gitlab-Portworx-Backup-5")
