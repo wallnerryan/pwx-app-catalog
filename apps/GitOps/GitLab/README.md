@@ -1,6 +1,10 @@
 
 # Gitlab Install with Portworx for Persistence
 
+Based on: 
+- https://docs.gitlab.com/charts/
+- https://docs.gitlab.com/charts/installation/deployment.html
+
 ## What is Gitlab
 
 GitLab is a complete DevOps platform, delivered as a single application
