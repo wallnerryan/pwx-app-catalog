@@ -12,7 +12,7 @@ spec:
     - key: "100 * (px_volume_usage_bytes / px_volume_capacity_bytes)"
       operator: Gt
       values:
-        - "60"
+        - "25"
   actions:
   - name: openstorage.io.action.volume/resize
     params:
