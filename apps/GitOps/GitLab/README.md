@@ -120,14 +120,21 @@ For example, these rules can be setup such that if the volume has `less than 20%
 
 ### To test capacity management
 
+(Password is `postgresql-postgres-password` in `kubectl get secret gitlab-postgresql-password  -o yaml`)
+
+```
+PASS=$(kubectl get secret gitlab-postgresql-password -ojsonpath='{.data.postgresql-postgres-password}' | base64 --decode ; echo)
+echo $PASS
+```
+
+Enter the database
 ```
 kubectl exec -it gitlab-postgresql-0 bash
 ```
 
-(Password is `postgresql-password` in `kubectl get secret gitlab-postgresql-password  -o yaml`)
-use `echo <string> |  base64 -d` to decode
+Login (use password from above)
 ```
- psql -U postgres
+psql -U postgres
 ```
 
 ```
