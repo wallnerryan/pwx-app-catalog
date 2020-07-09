@@ -91,31 +91,31 @@ function get_pwx_status() {
 function expose_lighthouse(){
     kubectl expose deployment px-lighthouse --name=lighthouse-lb-service \
      --type=LoadBalancer -n kube-system
-    until kubectl get svc lighthouse-lb-service -n kube-system | grep "${REGION}.elb.amazonaws.com"
-    do
-      echo "waiting for Lighthouse LoadBalancer...."
-      sleep 10
-    done
+    #until kubectl get svc lighthouse-lb-service -n kube-system | grep "${REGION}.elb.amazonaws.com"
+    #do
+    #  echo "waiting for Lighthouse LoadBalancer...."
+    #  sleep 10
+    #done
 }
 
 function expose_prometheus(){
     kubectl expose service prometheus  --port=9090 --target-port=9090 \
      --name=prometheus-lb-service --type=LoadBalancer -n kube-system
-    until kubectl get svc prometheus-lb-service -n kube-system | grep "${REGION}.elb.amazonaws.com"
-    do
-      echo "waiting for Prometheus LoadBalancer...."
-      sleep 10
-    done
+    #until kubectl get svc prometheus-lb-service -n kube-system | grep "${REGION}.elb.amazonaws.com"
+    #do
+    #  echo "waiting for Prometheus LoadBalancer...."
+    #  sleep 10
+    #done
 }
 
 function expose_grafana(){
     kubectl expose svc grafana --port=3000 --target-port=3000 \
      --name=grafana-lb-service --type=LoadBalancer -n kube-system
-    until kubectl get svc grafana-lb-service -n kube-system | grep "${REGION}.elb.amazonaws.com"
-    do
-      echo "waiting for Grafana LoadBalancer...."
-      sleep 10
-    done
+    #until kubectl get svc grafana-lb-service -n kube-system | grep "${REGION}.elb.amazonaws.com"
+    #do
+    #  echo "waiting for Grafana LoadBalancer...."
+    #  sleep 10
+    #done
 }
 
 function delete_loadbalancers() {
@@ -142,16 +142,31 @@ function install_helm() {
     fi
 }
 
-function install_pxcentral_onprem() {
-    # Currently PXC 1.0.0
-    read -p "Enter --license-password for px central onprem: " -s -e -r licpass;
+function install_pxcentral() {
+    PXC_VERSION="1.0.3"
+    read -p "Enter AWS AccessKey: " -s -e -r accessKey;
+    read -p "Enter AWS SecretKey: " -s -e -r secretKey;
+    read -p "Enter Admin Password: (Provide a proper strong password, containing .. One upper case, One lower case, One number, One special character ?#%$, Minimum 8 characters)" -s -e -r secretKey;
+
     echo -e "${YELLOW}Setting password and installing...${NC}\n"
-    sh central-install-1-0-0.sh \
-      --license-password ${licpass} \
-      --kubeconfig ~/.kube/config \
+    bash <(curl -s https://raw.githubusercontent.com/portworx/px-central-onprem/${PXC_VERSION}/install.sh) \
+      --px-store \
+      --px-backup \
+      --admin-password ${adminPass} \
+      --oidc \
+      --managed \
+      --cloud aws \
+      --cloudstorage \
+      --disk-type gp2 \
+      --disk-size 100 \
+      --pxcentral-namespace portworx \
+      --px-metrics-store \
+      --px-backup-organization myorg \
+      --cluster-name mycluster \
+      --admin-email admin@example.com\
       --admin-user admin \
-      --admin-password ${licpass} \
-      --cloud
+      --aws-access-key ${accessKey} \
+      --aws-secret-key ${secretKey}
 }
 
 function get_help() {
@@ -348,11 +363,9 @@ if [[ ! -z $CREATE ]] && [[ $CREATE == "true" ]]; then
         echo -e "${GREEN}Done${NC}"
         echo -n "Exposing Ports......"
         echo
-        # Need to fix if PX spec doesnt add monitoring
-        # to timeouot on exposing the service.
-        #expose_grafana
-        #expose_prometheus
-        #expose_lighthouse
+        expose_grafana
+        expose_prometheus
+        expose_lighthouse
         echo -e "${GREEN}Done${NC}"
     else
         echo -e "${YELLOW}Skipping Portworx Install......${NC}"
@@ -366,7 +379,7 @@ if [[ ! -z $CREATE ]] && [[ $CREATE == "true" ]]; then
     if [[ $PWX_CENTRAL == "true" ]]; then
         echo -n "Installing Portworx Central on the EKS cluster......"
         echo
-        install_pxcentral_onprem
+        install_pxcentral
         echo -e "${GREEN}Done${NC}"
         echo -n "Waiting until Portworx is Operational......"
         echo
@@ -409,7 +422,7 @@ if [[ ! -z $NO_CREATE_OR_DESTROY ]] && [[ $NO_CREATE_OR_DESTROY == "true" ]]; th
     if [[ $PWX_CENTRAL == "true" ]]; then
         echo -n "Installing Portworx Central on the EKS cluster......"
         echo
-        install_pxcentral_onprem
+        install_pxcentral
         echo -e "${GREEN}Done${NC}"
         echo -n "Waiting until Portworx is Operational......"
         echo
