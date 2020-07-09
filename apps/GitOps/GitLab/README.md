@@ -144,7 +144,7 @@ create database pxdemo;
 ```
 
 ```
-pgbench -U postgres  -i -s 600 pxdemo
+pgbench -U postgres  -i -s 500 pxdemo
 Password:
 dropping old tables...
 NOTICE:  table "pgbench_accounts" does not exist, skipping
@@ -175,8 +175,21 @@ kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl v l
 watch "kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl v i <postgres-PX-VOL-ID>"
 ```
 
+Watch autopilot events
 ```
 watch kubectl get events --field-selector involvedObject.kind=AutopilotRule --all-namespaces
+default     3m53s	Normal   Transition   autopilotrule/postgresql-auto-volume-resize   rule: postgresql-auto-volume-resize:pvc-4630cded-0727-409d-be67-5c6201434220 tra
+nsition from Normal => Triggered
+default     3m14s       Normal   Transition   autopilotrule/postgresql-auto-volume-resize   rule: postgresql-auto-volume-resize:pvc-4630cded-0727-409d-be67-5c6201434220 tra
+nsition from Triggered => ActiveActionsPending
+default     3m10s       Normal   Transition   autopilotrule/postgresql-auto-volume-resize   rule: postgresql-auto-volume-resize:pvc-4630cded-0727-409d-be67-5c6201434220 tra
+nsition from ActiveActionsPending => ActiveActionsInProgress
+default     3m2s 	Normal   Transition   autopilotrule/postgresql-auto-volume-resize   rule: postgresql-auto-volume-resize:pvc-4630cded-0727-409d-be67-5c6201434220 tra
+nsition from ActiveActionsInProgress => ActiveActionsTaken
+```
+
+Observe new size of PVC
+```
 kubectl get pvc
 ```
 
