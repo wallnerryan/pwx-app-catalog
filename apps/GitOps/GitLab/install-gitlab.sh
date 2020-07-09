@@ -1,12 +1,19 @@
 #!/bin/bash
 
 #Setup Portworx Components (PWX must be already installed)
-# *** Uncomment to setup monitoring ***
 
-#kubectl create -f prom-operator.yaml
-#until (kubectl get po -n kube-system -l app=prometheus-operator | grep "Running"); do sleep 3; echo "waiting for prometheus operator"; done
-#kubectl create -f monitoring.yaml
-#until (kubectl get po -n kube-system -l prometheus=prometheus | grep "Running"); do sleep 3; echo "setting up portworx monitoring"; done
+read -p "Install Prometheus for Portworx... y/n? (If Portworx was installed with monitoring enabled, type 'n')" -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    echo "setting up Gitlab with Portworx"
+    kubectl create -f prom-operator.yaml
+    until (kubectl get po -n kube-system -l app=prometheus-operator | grep "Running"); do sleep 3; echo "waiting for prometheus operator"; done
+    kubectl create -f monitoring.yaml
+    until (kubectl get po -n kube-system -l prometheus=prometheus | grep "Running"); do sleep 3; echo "setting up portworx monitoring"; done
+else
+        echo "Not installing Prometheus...continuing"
+fi
 
 # Add autopilot
 kubectl apply -f auto-pilot-cfg.yaml
@@ -60,8 +67,9 @@ helm upgrade --install gitlab gitlab/gitlab \
   -f helm_options.yaml 
 
 kubectl get svc gitlab-nginx-ingress-controller
-echo "Visit https://gitlab.${GITLAB_DOMAIN}:<443_NodePort>"
+echo "Visit https://gitlab.<GITLAB_DOMAIN>:<443_NodePort>"
 echo "User: root"
+until (kubectl get secret | grep "gitlab-gitlab-initial-root-password"); do sleep 3; echo "waiting for gitlab password"; done
 PASS=$(kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo)
 echo "Password: ${PASS}"
 

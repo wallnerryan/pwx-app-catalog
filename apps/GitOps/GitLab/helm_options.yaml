@@ -28,7 +28,7 @@ global:
   hosts:
     https: false
     domain: example.com
-    externalIP: 70.0.89.147
+    externalIP: 70.0.55.55
   operator:
     enabled: true
 certmanager-issuer:
