@@ -93,7 +93,7 @@ ID            NAME                                    SIZE    HA    SHARED    EN
 
 Portworx can manage expanding PVCs automatically which is typically left to the Gitlab admin to manually perform.
 
-To see he autopilot rules
+To see the autopilot rules
 
 ```
 $ kubectl get autopilotrule
