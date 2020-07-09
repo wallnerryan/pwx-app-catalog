@@ -583,7 +583,7 @@ spec:
         - --verbose
         - --leader-elect=true
         - --health-monitor-interval=120
-        image: openstorage/stork:2.4.0
+        image: openstorage/stork:2.4.2
         imagePullPolicy: Always
         env:
         - name: "PX_SERVICE_NAME"
