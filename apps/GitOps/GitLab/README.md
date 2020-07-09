@@ -40,12 +40,12 @@ Let Portworx automatically manage replication, capacity management and backup & 
 1. Navigate to `https://gitlab.example.com:<NodePort_IfUsing>/admin/runners`
 2. Update `gitlab-runner.yaml`
 
-Update the NodePort to  and `runnerRegistrationToken`
+Copy the token next to `Use the following registration token during setup` and place in `gitlan-runner.yaml`
 ```
 runnerRegistrationToken: "<token from above /admin/runners"
 ```
 
-Install
+Next, install the runner
 ```
 helm repo add gitlab https://charts.gitlab.io
 helm install --namespace default  gitlab-runner -f gitlab-runner.yaml gitlab/gitlab-runner
