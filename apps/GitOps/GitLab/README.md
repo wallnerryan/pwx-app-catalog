@@ -40,7 +40,7 @@ Let Portworx automatically manage replication, capacity management and backup & 
 1. Navigate to `https://gitlab.example.com:<NodePort_IfUsing>/admin/runners`
 2. Update `gitlab-runner.yaml`
 
-Copy the token next to `Use the following registration token during setup` and place in `gitlan-runner.yaml`
+Copy the token next to `Use the following registration token during setup` and place in `gitlab-runner.yaml`
 ```
 runnerRegistrationToken: "<token from above /admin/runners"
 ```
