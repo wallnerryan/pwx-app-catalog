@@ -1,5 +1,7 @@
 # MongoDB Single Node
 
+Based on: https://medium.com/@dilipkumar/standalone-mongodb-on-kubernetes-cluster-19e7b5896b27
+
 ```
 kubectl exec -it mongodb-standalone-0 sh
 mongo mongodb://mongodb-standalone-0.database:27017
