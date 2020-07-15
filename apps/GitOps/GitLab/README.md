@@ -51,7 +51,7 @@ helm repo add gitlab https://charts.gitlab.io
 helm install --namespace default  gitlab-runner -f gitlab-runner.yaml gitlab/gitlab-runner
 ```
 
-## Using GitLab on Portworx
+## Using GitLab on Kubernetes/Portworx with NodePort
 
 When setup with `NodePort` the htts and ssh ports will be non standard.
 
