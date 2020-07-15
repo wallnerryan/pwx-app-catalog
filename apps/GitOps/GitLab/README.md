@@ -51,6 +51,36 @@ helm repo add gitlab https://charts.gitlab.io
 helm install --namespace default  gitlab-runner -f gitlab-runner.yaml gitlab/gitlab-runner
 ```
 
+## Using GitLab on Portworx
+
+When setup with `NodePort` the htts and ssh ports will be non standard.
+
+```
+NAME                              TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)                                   AGE
+gitlab-nginx-ingress-controller   NodePort   10.233.23.65   <none>        80:32660/TCP,443:31961/TCP,22:31567/TCP   2s
+```
+
+1. Access the UI via the DNS in `helm_option.yaml` such as https://gitlab.example.com:31961/
+2. Setup users and a projet
+3. Upload your SSH keys for a user 
+4. Update your `.ssh/config`
+  ```
+  Host gitlab.example.com
+   Port 31567
+  ```
+
+Then you may clone projects succesfully.
+
+```
+git clone git@gitlab.example.com:root/new-project-3.git
+Cloning into 'new-project-3'...
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Receiving objects: 100% (3/3), done.
+```
+
+
 ## Unnderstanding Gitlab Portworx Volumes for Persistence, High Availability and Data Protection
 
 ```
