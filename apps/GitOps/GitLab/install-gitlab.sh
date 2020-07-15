@@ -2,6 +2,18 @@
 
 #Setup Portworx Components (PWX must be already installed)
 
+echo "Enter the namespace you would like GitLab deployed to: "  
+read gitlab_namespace
+
+if [ -z "$gitlab_namespace" ]
+then
+      echo "using default namespace"
+      gitlab_namespace="default"
+else
+      echo "using $gitlab_namespace namespace"
+      kubectl create ns $gitlab_namespace
+fi
+
 read -p "Install Prometheus for Portworx... y/n? (If Portworx was installed with monitoring enabled, type 'n')" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
@@ -15,23 +27,23 @@ else
         echo "Not installing Prometheus...continuing"
 fi
 
-# Add autopilot
+# Add autopilot (kube-system)
 kubectl apply -f auto-pilot-cfg.yaml
 kubectl apply -f autopilot.yaml
 
 # add storage classes
-kubectl create -f pwx-gitaly-sc.yaml
-kubectl create -f pwx-postgresql-sc.yaml
-kubectl create -f pwx-redis-sc.yaml
-kubectl create -f pwx-minio-sc.yaml
-kubectl create -f pwx-prometheus-sc.yaml
+kubectl create -f pwx-gitaly-sc.yaml -n $gitlab_namespace
+kubectl create -f pwx-postgresql-sc.yaml -n $gitlab_namespace
+kubectl create -f pwx-redis-sc.yaml -n $gitlab_namespace
+kubectl create -f pwx-minio-sc.yaml -n $gitlab_namespace
+kubectl create -f pwx-prometheus-sc.yaml -n $gitlab_namespace
 
 # Add auto pilot rules
-kubectl create -f gitaly-ap-rule.yaml
-kubectl create -f postgresql-ap-rule.yaml
-kubectl create -f redis-ap-rule.yaml
-kubectl create -f minio-ap-rule.yaml
-kubectl create -f prometheus-ap-rule.yaml
+kubectl create -f gitaly-ap-rule.yaml -n $gitlab_namespace
+kubectl create -f postgresql-ap-rule.yaml -n $gitlab_namespace
+kubectl create -f redis-ap-rule.yaml -n $gitlab_namespace
+kubectl create -f minio-ap-rule.yaml -n $gitlab_namespace
+kubectl create -f prometheus-ap-rule.yaml -n $gitlab_namespace
 
 cat helm_options.yaml
 
@@ -49,7 +61,7 @@ sleep 30
 
 # Install the GitLab Operator
 GITLAB_CHART_VERSION=v3.0.0
-kubectl apply -f https://gitlab.com/gitlab-org/charts/gitlab/raw/${GITLAB_CHART_VERSION}/support/crd.yaml
+kubectl apply -f https://gitlab.com/gitlab-org/charts/gitlab/raw/${GITLAB_CHART_VERSION}/support/crd.yaml -n $gitlab_namespace
 
 sleep 10
 
@@ -64,13 +76,14 @@ helm repo update
 # (add) --set global.edition=ce
 helm upgrade --install gitlab gitlab/gitlab \
   --timeout 600s \
+  --namespace $gitlab_namespace \
   -f helm_options.yaml 
 
-kubectl get svc gitlab-nginx-ingress-controller
+kubectl get svc gitlab-nginx-ingress-controller -n $gitlab_namespace
 echo "Visit https://gitlab.<GITLAB_DOMAIN>:<443_NodePort>"
 echo "User: root"
-until (kubectl get secret | grep "gitlab-gitlab-initial-root-password"); do sleep 3; echo "waiting for gitlab password"; done
-PASS=$(kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo)
+until (kubectl -n $gitlab_namespace get secret | grep "gitlab-gitlab-initial-root-password"); do sleep 3; echo "waiting for gitlab password"; done
+PASS=$(kubectl -n $gitlab_namespace get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo)
 echo "Password: ${PASS}"
 
 
