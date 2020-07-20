@@ -21,6 +21,9 @@ metadata:
    namespace: jenkins
    labels:
      app: jenkins
+   annotations:
+    px/secret-name: volume-secrets
+    px/secret-namespace: portworx
 spec:
    storageClassName: jenkins-storage-class
    accessModes:
