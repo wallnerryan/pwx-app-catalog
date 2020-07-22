@@ -254,3 +254,11 @@ Get backup details
 Restore
 
 ![Alt text](restore.png?raw=true "Gitlab-Portworx-Backup-5")
+
+Update DNS
+
+If you are using `/etc/hosts` for dns for gitlab.example.com, update `/etc/hosts` then clear cache.
+
+On Chrome
+chrome://net-internals/#dns
+chrome://net-internals/#dns
