@@ -252,4 +252,5 @@ Get backup details
 ![Alt text](details.png?raw=true "Gitlab-Portworx-Backup-4")
 
 Restore
+
 ![Alt text](restore.png?raw=true "Gitlab-Portworx-Backup-5")
