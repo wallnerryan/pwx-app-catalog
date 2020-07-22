@@ -231,6 +231,16 @@ Select Gitlab Namespace
 Start the backup 
 ![Alt text](startbackup.png?raw=true "Gitlab-Portworx-Backup-2")
 
+You may optionally provide pre and post exec rules for services within Gitlab. For instance, you may want to flush data to disk in Postgres to ensure application consistency. 
+
+To do this, create a rule that targets the label `app:postgresql` abd runs  `CHECKPOINT` 
+
+```bash
+PGPASSWORD=$POSTGRES_PASSWORD; psql -U "$POSTGRES_USER" -c "CHECKPOINT";
+```
+
+Similar approaches can be taken with Redis, to perform `SAVE` or `BGSAVE` commands prior to backup.
+
 View backup
 ![Alt text](backup.png?raw=true "Gitlab-Portworx-Backup-3")
 
