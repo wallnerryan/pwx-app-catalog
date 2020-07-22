@@ -223,7 +223,7 @@ Observe new size of PVC
 kubectl get pvc
 ```
 
-## Usiing PX-Backup to Backup and Restore Gitlab
+## Using PX-Backup to Backup and Restore Gitlab
 
 Select Gitlab Namespace
 
