@@ -1,0 +1,44 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+spec:
+  version: 7.8.0
+  nodeSets:
+  - name: default
+    count: 3
+    podTemplate:
+      metadata:
+        labels:
+          appname: "elastisearch-app"
+      spec:
+        containers:
+          - name: elasticsearch
+            volumeMounts:
+            - name: elasticsearch-backups
+              mountPath: /mnt/es-bakups
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: elastic-pwx-storage-class
+    - metadata:
+        name: elasticsearch-backups
+      spec:
+        accessModes:
+        - ReadWriteMany
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: elastic-shared-pwx-storage-class
+    config:
+      node.master: true
+      node.data: true
+      node.ingest: true
+      node.store.allow_mmap: false
+      path.repo: ["/mnt/es-backups"]
