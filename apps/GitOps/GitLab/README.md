@@ -81,7 +81,7 @@ Receiving objects: 100% (3/3), done.
 ```
 
 
-## Unnderstanding Gitlab Portworx Volumes for Persistence, High Availability and Data Protection
+## Understanding Gitlab Portworx Volumes for Persistence, High Availability and Data Protection
 
 ```
 $ kubectl get pvc
@@ -148,7 +148,7 @@ default     3s          Normal   Transition   autopilotrule/redis-auto-volume-re
 
 For example, these rules can be setup such that if the volume has `less than 20%` of the capacity left it will `grow the volume by 200%`
 
-### To test capacity management
+### To test capacity management with PX-Autopilot
 
 (Password is `postgresql-postgres-password` in `kubectl get secret gitlab-postgresql-password  -o yaml`)
 
