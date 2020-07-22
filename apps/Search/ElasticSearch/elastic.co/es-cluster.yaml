@@ -16,7 +16,7 @@ spec:
           - name: elasticsearch
             volumeMounts:
             - name: elasticsearch-backups
-              mountPath: /mnt/es-bakups
+              mountPath: /usr/share/elasticsearch/backups
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -34,11 +34,11 @@ spec:
         - ReadWriteMany
         resources:
           requests:
-            storage: 5Gi
+            storage: 50Gi
         storageClassName: elastic-shared-pwx-storage-class
     config:
       node.master: true
       node.data: true
       node.ingest: true
       node.store.allow_mmap: false
-      path.repo: ["/mnt/es-backups"]
+      path.repo: ["/usr/share/elasticsearch/backups"]

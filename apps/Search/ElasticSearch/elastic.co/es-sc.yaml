@@ -15,6 +15,6 @@ metadata:
 provisioner: kubernetes.io/portworx-volume
 parameters:
    repl: "3"
-   shared: true
+   shared: "true"
 allowVolumeExpansion: true
 reclaimPolicy: Retain
