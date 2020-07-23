@@ -1,0 +1,14 @@
+##### Portworx persistent volume claim
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+   name: elasticsearch-backups
+   labels:
+     appname: "elastisearch-app"
+spec:
+   storageClassName: elastic-shared-pwx-storage-class
+   accessModes:
+     - ReadWriteOnce
+   resources:
+     requests:
+       storage: 50Gi

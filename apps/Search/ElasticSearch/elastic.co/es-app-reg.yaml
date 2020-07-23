@@ -1,0 +1,11 @@
+# via https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-api-elasticsearch-k8s-elastic-co-v1.html#k8s-api-github-com-elastic-cloud-on-k8s-pkg-apis-elasticsearch-v1-elasticsearchspec
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: ApplicationRegistration
+metadata:
+  name: elasticsearch
+resources:
+- PodsPath: ""
+  group: elasticsearch.k8s.elastic.co
+  version: v1
+  kind: Elasticsearch
+  keepStatus: false 
