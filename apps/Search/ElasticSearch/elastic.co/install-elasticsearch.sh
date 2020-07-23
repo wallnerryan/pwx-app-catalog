@@ -37,6 +37,9 @@ kubectl create -f es-ap-rule.yaml -n elasticsearch
 #create shared volume for backups
 kubectl create -f backups-pvc.yaml -n elasticsearch
 
+# create app registration
+kubectl create -f es-app-reg.yaml -n elasticsearch
+
 # create es cluster using PX for data volumes and backup volumes
 kubectl create -f es-cluster.yaml -n elasticsearch
 

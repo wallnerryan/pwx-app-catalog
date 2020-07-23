@@ -95,6 +95,16 @@ kubectl -n elasticsearch exec elasticsearch-es-default-0 -- curl -X PUT -u "elas
 }
 ```
 
+Second
+```
+ kubectl -n elasticsearch exec elasticsearch-es-default-0 -- curl -X PUT -u "elastic:$PASSWORD" -k "https://elasticsearch-es-http:9200/customer/external/2?pretty&pretty" -H 'Content-Type: application/json' -d'{"name": "Ryan Wallner"}';
+```
+
+Get
+```
+kubectl -n elasticsearch exec elasticsearch-es-default-0 -- curl -X GET -u "elastic:$PASSWORD" -k "https://elasticsearch-es-http:9200/customer/external/2?pretty&pretty";
+```
+
 # PX-Backup
 
 ## Pre-exec Rule
@@ -131,8 +141,27 @@ snap-jDKxIUjOQMKhTPegh27zuA.dat
 
 ## Restore
 
-> If restoring to new cluster, make sure to use `ApplicationRegistration` or apply elastic CRDs to destination prior to restore.
+> If restoring to new cluster, make sure to use `ApplicationRegistration`. The install script automatically sets this up.
 
+### Test restore.
+
+Simluate disaster
+```
+kubectl delete ns elasticsearch
+```
+
+In PX-Backup, select the backup and click restore. Then make sure all nodes are online.
+```
+kubectl -n elasticsearch exec elasticsearch-es-default-0 -- /bin/sh -c "curl -X GET -u \"elastic:$PASSWORD\" -k \"https://elasticsearch-es-http:9200/_cat/nodes?v\""
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0ip             heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
+10.233.96.216            23          63  10    0.39    1.05     1.35 dilmrt    -      elasticsearch-es-default-2
+10.233.105.125           43          72  16    2.28    2.04     2.73 dilmrt    *      elasticsearch-es-default-0
+10.233.92.44             15          63  20    2.95    3.30     3.50 dilmrt    -      elasticsearch-es-default-1
+```
+
+#### Optional restore specific indices from pre-exec snapshots 
 Once Elasticsearch and all the backups are restored, you will have a running Elasticsearch cluster. However, you may wish to take the extras step by also restoring ertain indices or cluster state by restoring from a specific snapshot in the `/usr/share/elasticsearch/backups` directory.
 
 First, get a list of snapshots
