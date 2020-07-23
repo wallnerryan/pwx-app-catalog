@@ -36,17 +36,7 @@ spec:
       - name: kibana
         image: docker.elastic.co/kibana/kibana:7.8.0
         env:
-        - name: "CLUSTER_NAME"
-          value: "elasticsearch"
-        - name: XPACK_SECURITY_ENABLED
-          value: 'false'
-        - name: XPACK_GRAPH_ENABLED
-          value: 'false'
-        - name: XPACK_ML_ENABLED
-          value: 'false'
-        - name: XPACK_REPORTING_ENABLED
-          value: 'false'
-        - name: ELASTICSEARCH_URL
+        - name: ELASTICSEARCH_HOSTS
           value: 'http://elasticsearch-es-http.elasticsearch.svc:9200'
         resources:
           limits:
