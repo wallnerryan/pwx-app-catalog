@@ -56,7 +56,7 @@ PASSWORD=$(kubectl -n elasticsearch get secret elasticsearch-es-elastic-user -o 
 until (kubectl -n elasticsearch exec elasticsearch-es-default-0 -- curl -u "elastic:$PASSWORD" -k "https://elasticsearch-es-http:9200" | grep "You Know, for Search"); do echo "waiting for cluster response"; sleep 3; done
 
 echo "connecting kibana"
-kubectl create -f kibana.yaml -n elasticsearch
+kubectl create -f kibana-ui.yaml -n elasticsearch
 
 echo "Setup shared filesystem backup location in pods"
 kubectl -n elasticsearch cp backup-location.json elasticsearch-es-default-0:/usr/share/elasticsearch/backup-location.json
