@@ -20,7 +20,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
     echo "setting up Gitlab with Portworx"
     kubectl create -f prom-operator.yaml
-    until (kubectl get po -n kube-system -l app=prometheus-operator | grep "Running"); do sleep 3; echo "waiting for prometheus operator"; done
+    until (kubectl get po -n kube-system -l k8s-app=prometheus-operator | grep "Running"); do sleep 3; echo "waiting for prometheus operator"; done
     kubectl create -f monitoring.yaml
     until (kubectl get po -n kube-system -l prometheus=prometheus | grep "Running"); do sleep 3; echo "setting up portworx monitoring"; done
 else
