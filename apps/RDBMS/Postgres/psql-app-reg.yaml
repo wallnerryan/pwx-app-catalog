@@ -1,0 +1,10 @@
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: ApplicationRegistration
+metadata:
+  name: zalando-postgres
+resources:
+- PodsPath: ""
+  group: acid.zalan.do
+  version: v1
+  kind: postgresql
+  keepStatus: false 
