@@ -116,8 +116,14 @@ You can fetch the password
 PASSWORD=$(kubectl -n elasticsearch get secret elasticsearch-es-elastic-user -o go-template='{{.data.elastic | base64decode}}'); echo $PASSWORD
 ```
 
-### Example of pre-exec rule
+### Examples of pre-exec rule
 
+#### Freeze customer index
+```
+curl -X POST -u "elastic:$PASSWORD" -k "https://elasticsearch-es-http:9200/customer/_freeze?pretty"
+```
+
+#### Take snapshot of index
 with uuid
 ```
 kubectl -n elasticsearch exec elasticsearch-es-default-0 -- /bin/sh -c "curl -X PUT -u \"elastic:$PASSWORD\" -k \"https://elasticsearch-es-http:9200/_snapshot/es_backups/snapshot_$(uuidgen)?wait_for_completion=true&pretty\""
@@ -139,6 +145,13 @@ meta-eplvWNB0SLW29U5Pizph9w.dat
 meta-jDKxIUjOQMKhTPegh27zuA.dat
 snap-eplvWNB0SLW29U5Pizph9w.dat
 snap-jDKxIUjOQMKhTPegh27zuA.dat
+```
+
+### Post exec
+
+#### UnFreeze customer index
+```
+curl -X POST -u "elastic:$PASSWORD" -k "https://elasticsearch-es-http:9200/customer/_unfreeze?pretty"
 ```
 
 ## Restore
