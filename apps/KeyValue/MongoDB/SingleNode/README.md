@@ -20,3 +20,15 @@ db.users.insert({name: 'your name'})
 show collections
 db.users.find()
 ```
+
+## PX-Backup
+
+Pre
+```
+mongo --eval "printjson(db.fsyncLock())"
+```
+
+Post
+```
+mongo --eval "printjson(db.fsyncUnlock())"
+```
