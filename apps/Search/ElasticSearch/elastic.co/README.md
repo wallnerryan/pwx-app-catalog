@@ -95,6 +95,8 @@ kubectl -n elasticsearch exec elasticsearch-es-default-0 -- curl -X PUT -u "elas
 }
 ```
 
+![alt](https://i.imgur.com/DdwDKJW.png)
+
 Second
 ```
  kubectl -n elasticsearch exec elasticsearch-es-default-0 -- curl -X PUT -u "elastic:$PASSWORD" -k "https://elasticsearch-es-http:9200/customer/external/2?pretty&pretty" -H 'Content-Type: application/json' -d'{"name": "Ryan Wallner"}';
