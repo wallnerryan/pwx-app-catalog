@@ -8,6 +8,3 @@ resources:
   version: v1beta1
   kind: GitLab
   keepStatus: false
-  suspendOptions:
-    path: spec.stopped #path to disable cassandra datacenter
-    type: bool #type of value to be set for spec.stopped

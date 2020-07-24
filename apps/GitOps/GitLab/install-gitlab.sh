@@ -45,6 +45,9 @@ kubectl create -f redis-ap-rule.yaml -n $gitlab_namespace
 kubectl create -f minio-ap-rule.yaml -n $gitlab_namespace
 kubectl create -f prometheus-ap-rule.yaml -n $gitlab_namespace
 
+# Register Application CRD
+kubectl create -f gitlab-app-reg.yaml -n $gitlab_namespace
+
 cat helm_options.yaml
 
 read -p "Portworx is setup, The above configuration will used for Gitlab, continue.. y/n? " -n 1 -r
