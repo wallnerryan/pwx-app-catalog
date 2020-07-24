@@ -56,10 +56,12 @@ PASSWORD=$(kubectl -n elasticsearch get secret elasticsearch-es-elastic-user -o 
 until (kubectl -n elasticsearch exec elasticsearch-es-default-0 -- curl -u "elastic:$PASSWORD" -k "https://elasticsearch-es-http:9200" | grep "You Know, for Search"); do echo "waiting for cluster response"; sleep 3; done
 
 echo "connecting kibana"
-kubectl create -f kibana-ui.yaml -n elasticsearch
+kubectl create -f kibana.yaml -n elasticsearch
 
 echo "Setup shared filesystem backup location in pods"
 kubectl -n elasticsearch cp backup-location.json elasticsearch-es-default-0:/usr/share/elasticsearch/backup-location.json
 kubectl  -n elasticsearch exec elasticsearch-es-default-0 -- curl -u "elastic:$PASSWORD" -k -X PUT "https://elasticsearch-es-http:9200/_snapshot/es_backups?pretty" -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/backup-location.json
 
-
+echo "having kibana use NodePort"
+until (kubectl -n elasticsearch get svc | grep "kibana-kb-http"); do echo "waiting for kibana svc"; sleep 3; done
+kubectl patch svc kibana-kb-http -n elasticsearch --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"}]'
