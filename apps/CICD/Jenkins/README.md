@@ -1,5 +1,9 @@
 # Jenkins on PX
 
+![alt](https://i.imgur.com/Ks8RZ8H.png)
+
+## Install
+
 kubectl create -f secrets.yaml
 kubectl create -f jenkins.yaml
 
