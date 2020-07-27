@@ -1,6 +1,8 @@
 
 # Gitlab Install with Portworx for Persistence
 
+![alt](https://i.imgur.com/agljd1C.png)
+
 Based on: 
 - https://docs.gitlab.com/charts/
 - https://docs.gitlab.com/charts/installation/deployment.html
