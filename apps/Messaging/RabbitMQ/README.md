@@ -1,5 +1,7 @@
 # RabbitMQ on Portworx
 
+![Alt](https://i.imgur.com/MwB6ZmK.png)
+
 ## Install
 
 ```
