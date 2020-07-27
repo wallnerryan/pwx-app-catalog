@@ -19,5 +19,3 @@ helm install \
   --set schedulerName=stork \
   stable/rabbitmq-ha
 
-#TODO
-# https://docs.portworx.com/portworx-install-with-kubernetes/application-install-with-kubernetes/rabbitmq/#validate-the-cluster-functionality
