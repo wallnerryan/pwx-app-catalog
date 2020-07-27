@@ -1,5 +1,7 @@
 # Elasticsearch (elastic.co) Cluster with Portworx
 
+![alt](https://i.imgur.com/VPnSaRt.png)
+
 ## Pre-reqs
  - Portworx must be installed Kubernetes
  - KUBECONFIG points to Kubernetes cluster
