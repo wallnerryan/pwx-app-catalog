@@ -140,3 +140,24 @@ Confluent Kafka Backed up with PX-Backup
 ![alt](https://i.imgur.com/HMbHdcI.png)
 
 ![alt](https://i.imgur.com/MAyZ3ab.png)
+
+## Restore
+
+### Adjust security in Openshift
+
+https://docs.confluent.io/5.3.0/installation/operator/co-deployment.html#openshift-deployment
+
+OR
+
+(Dev or test only!)
+
+`oc edit scc` 
+- (edit all allowHostPorts true)
+- (edit all runAsUser to RunAsAny)
+- (edit fsGroup to RunAsAny)
+
+### Restore using PX-Backup
+
+Select destination cluster and start the restore job.
+
+![alt]()
