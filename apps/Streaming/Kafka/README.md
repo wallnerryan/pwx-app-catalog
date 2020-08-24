@@ -22,10 +22,12 @@ https://docs.confluent.io/5.3.0/installation/operator/co-deployment.html#openshi
 
 OR
 
-oc edit scc 
-	(edit all allowHostPorts true)
-	(edit all runAsUser to RunAsAny)
-	(edit fsGroup to RunAsAny)
+(Dev or test only!)
+
+`oc edit scc` 
+- (edit all allowHostPorts true)
+- (edit all runAsUser to RunAsAny)
+- (edit fsGroup to RunAsAny)
 
 
 ### Install
