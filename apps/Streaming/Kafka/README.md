@@ -116,3 +116,11 @@ redis       2h
 weblogic    2h
 zookeeper   9s
 ```
+
+## Backup
+
+Confluent Kafka Backed up with PX-Backup
+
+![alt](https://i.imgur.com/HMbHdcI.png)
+
+![alt](https://i.imgur.com/MAyZ3ab.png)
