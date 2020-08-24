@@ -1,0 +1,10 @@
+apiVersion: stork.libopenstorage.org/v1alpha1
+kind: ApplicationRegistration
+metadata:
+  name: zookeeper
+resources:
+- PodsPath: ""
+  group: zookeeper.cluster.confluent.io
+  version: v1alpha1
+  kind: ZookeeperCluster
+  keepStatus: false
