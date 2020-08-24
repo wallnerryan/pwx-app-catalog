@@ -4,7 +4,7 @@ metadata:
   name: kafka
 resources:
 - PodsPath: ""
-  group: kafka.cluster.confluent.io
+  group: cluster.confluent.com
   version: v1alpha1
   kind: KafkaCluster
   keepStatus: false

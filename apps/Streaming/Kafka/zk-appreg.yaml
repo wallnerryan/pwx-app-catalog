@@ -4,7 +4,7 @@ metadata:
   name: zookeeper
 resources:
 - PodsPath: ""
-  group: zookeeper.cluster.confluent.io
+  group: cluster.confluent.com
   version: v1alpha1
   kind: ZookeeperCluster
   keepStatus: false
