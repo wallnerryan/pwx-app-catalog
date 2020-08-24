@@ -32,12 +32,23 @@ OR
 
 ### Install
 
+Pull this repo.
+`cd pwx-app-catalog/apps/Streaming/Kafka/`
+
+Download the Confluent Kafka Operator Bundle
 ```
 wget https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-20190726-v0.65.0.tar.gz
 cd <CONFLUENT_TAR_EXOPORT>/helm/
+```
+
+Edit the YAML
+```
 vi ../values.yaml
 export VALUES_FILE="../values.yaml"
+```
 
+Install Kafka and Zookeeper
+```
 helm install kafka-2-operator -f $VALUES_FILE --namespace kafka-2 --set operator.enabled=true ./confluent-operator
 
 helm install kafka-2-zk -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set zookeeper.enabled=true ./confluent-operator
@@ -47,7 +58,10 @@ helm install kafka-2-zk -f $VALUES_FILE  --namespace kafka-2 --set disableHostPo
 helm install kafka-2-kafka -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set kafka.enabled=true ./confluent-operator
 
 helm install kafka-2-schemaregistry -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set schemaregistry.enabled=true ./confluent-operator
+```
 
+Verify and Test Kafka
+```
 kubectl get kafka -n kafka-2 -oyaml | grep bootstrap.servers
 
 kubectl -n operator exec -it kafka-0 bash
