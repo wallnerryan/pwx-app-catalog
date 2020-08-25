@@ -95,9 +95,9 @@ txnlog-zookeeper-0   Bound    pvc-0a2ac76d-e631-11ea-821b-02815434edc7   10Gi   
 txnlog-zookeeper-1   Bound    pvc-0aa4e801-e631-11ea-821b-02815434edc7   10Gi       RWO            zookeeper-standard-ssd-us-east-1b   24m
 txnlog-zookeeper-2   Bound    pvc-0b1e9130-e631-11ea-821b-02815434edc7   10Gi       RWO            zookeeper-standard-ssd-us-east-1c   24m
 
-[centos@ip-172-31-50-202 helm]$ PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
-[centos@ip-172-31-50-202 helm]$ alias pxctl="kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl "
-[centos@ip-172-31-50-202 helm]$ pxctl v l
+$ PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
+$ alias pxctl="kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl "
+$ pxctl v l
 ID            NAME                        SIZE    HA    SHARED    ENCRYPTED    IO_PRIORITY    STATUS            SNAP-ENABLED
 845057556591530132    pvc-09ed87fa-e631-11ea-821b-02815434edc7    10 GiB    2    no    no        LOW        up - attached on 172.31.47.151    no
 274002250613238302    pvc-0a2ac76d-e631-11ea-821b-02815434edc7    10 GiB    2    no    no        LOW        up - attached on 172.31.47.151    no
