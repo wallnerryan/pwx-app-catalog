@@ -166,3 +166,9 @@ Select destination cluster and start the restore job.
 
 ![alt](https://i.imgur.com/ozmhMk9.png)
 
+### Test the restore worked
+
+```
+kubectl exec -it kafka-0 -n kafka-2 -- bash
+(kafk-0) kafka-console-consumer --from-beginning --topic example --bootstrap-server  kafka:9071 --consumer.config kafka.properties
+```
