@@ -160,4 +160,9 @@ OR
 
 Select destination cluster and start the restore job.
 
-![alt]()
+![alt](https://i.imgur.com/03qoI41.png)
+
+![alt](https://i.imgur.com/AFkt0sA.png)
+
+![alt](https://i.imgur.com/ozmhMk9.png)
+
