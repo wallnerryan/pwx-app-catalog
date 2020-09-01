@@ -83,7 +83,11 @@ EOF
 (kafka-0) seq 10000 | kafka-console-producer --topic example --broker-list kafka:9071 --producer.config kafka.properties
 
 (kafka-0) kafka-console-consumer --from-beginning --topic example --bootstrap-server  kafka:9071 --consumer.config kafka.properties
-
+9997
+9998
+9999
+10000
+^CProcessed a total of 10000 messages
 ```
 
 ### PX Persistence 
