@@ -62,7 +62,7 @@ Verify and Test Kafka
 ```
 kubectl get kafka -n kafka-2 -oyaml | grep bootstrap.servers
 
-kubectl -n operator exec -it kafka-0 bash
+kubectl -n kafka-2 exec -it kafka-0 bash
 
 (kafka-0) cat << EOF > kafka.properties
 bootstrap.servers=kafka:9071
