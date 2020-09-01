@@ -78,7 +78,7 @@ EOF
 
 (kafka-0) kafka-broker-api-versions --command-config kafka.properties --bootstrap-server kafka:9071
 
-(kafka-0) kafka-topics --create --zookeeper zookeeper.kafka-2.svc.cluster.local:2181/kafka-kafka-2 --replication-factor 3 --partitions 1 --topic example
+(kafka-0) kafka-topics --create --zookeeper zookeeper.kafka-2.svc.cluster.local:2181/kafka-kafka-2 --replication-factor 2 --partitions 1 --topic example
 
 (kafka-0) seq 10000 | kafka-console-producer --topic example --broker-list kafka:9071 --producer.config kafka.properties
 
