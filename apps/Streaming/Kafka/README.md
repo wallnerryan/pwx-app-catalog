@@ -187,3 +187,5 @@ $ oc -n kafka-2 delete zookeepercluster.cluster.confluent.com/zookeeper kafkaclu
 $ oc delete crd zookeeperclusters.cluster.confluent.com kafkaclusters.cluster.confluent.com
 $ oc delete ns kafka-2
 ```
+
+You may also troubleshoot using https://access.redhat.com/solutions/4165791. If you delete namespace before CRDs or Finalizers it can get stuck `Terminating`
