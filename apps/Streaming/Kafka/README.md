@@ -51,10 +51,13 @@ Install Kafka and Zookeeper
 ```
 helm install kafka-2-operator -f $VALUES_FILE --namespace kafka-2 --set operator.enabled=true ./confluent-operator
 
+(Remove `--set disableHostPort=true` if you have enough nodes)
 helm install kafka-2-zk -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set zookeeper.enabled=true ./confluent-operator
 
+(Remove `--set disableHostPort=true` if you have enough nodes)
 helm install kafka-2-kafka -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set kafka.enabled=true ./confluent-operator
 
+(Must not be using `--set disableHostPort=true` for Kakfa/ZK)
 helm install kafka-2-schemaregistry -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set schemaregistry.enabled=true ./confluent-operator
 ```
 
