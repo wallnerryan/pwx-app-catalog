@@ -47,7 +47,7 @@ vi ../values.yaml
 export VALUES_FILE="../values.yaml"
 ```
 
-> Note the below snipper from `values.yaml` is what makes Kafka, ZK and other confluent components use Portworx.
+> Note the below snippet from `values.yaml` is what makes Kafka, ZK and other confluent components use Portworx.
 ```
 storage:
       ##
