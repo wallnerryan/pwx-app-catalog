@@ -37,7 +37,7 @@ Pull this repo.
 
 Download the Confluent Kafka Operator Bundle
 ```
-wget https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-20190726-v0.65.0.tar.gz
+wget https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-5.5.1.tar.gz
 cd <CONFLUENT_TAR_EXOPORT>/helm/
 ```
 
