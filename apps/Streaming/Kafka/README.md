@@ -191,7 +191,7 @@ kubectl exec -it kafka-0 -n kafka-2 -- bash
 (kafk-0) kafka-console-consumer --from-beginning --topic example --bootstrap-server  kafka:9071 --consumer.config kafka.properties
 ```
 
-### Cleanup Distination (restored)
+### Cleanup Destination (restored)
 
 ```
 $ oc -n kafka-2 delete zookeepercluster.cluster.confluent.com/zookeeper kafkacluster.cluster.confluent.com/kafka
