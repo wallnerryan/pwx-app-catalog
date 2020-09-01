@@ -179,3 +179,11 @@ Select destination cluster and start the restore job.
 kubectl exec -it kafka-0 -n kafka-2 -- bash
 (kafk-0) kafka-console-consumer --from-beginning --topic example --bootstrap-server  kafka:9071 --consumer.config kafka.properties
 ```
+
+### Cleanup Distination (restored)
+
+```
+$ oc -n kafka-2 delete zookeepercluster.cluster.confluent.com/zookeeper kafkacluster.cluster.confluent.com/kafka
+$ oc delete crd zookeeperclusters.cluster.confluent.com kafkaclusters.cluster.confluent.com
+$ oc delete ns kafka-2
+```
