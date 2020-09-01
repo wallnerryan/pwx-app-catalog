@@ -47,6 +47,17 @@ vi ../values.yaml
 export VALUES_FILE="../values.yaml"
 ```
 
+> Note the below snipper from `values.yaml` is what makes Kafka, ZK and other confluent components use Portworx.
+```
+storage:
+      ##
+      provisioner: kubernetes.io/portworx-volume
+      reclaimPolicy: Delete
+      allowVolumeExpansion: true
+      parameters:
+        repl: "2"
+```
+
 Install Kafka and Zookeeper
 ```
 helm install kafka-2-operator -f $VALUES_FILE --namespace kafka-2 --set operator.enabled=true ./confluent-operator
