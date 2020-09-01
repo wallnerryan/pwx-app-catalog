@@ -61,6 +61,8 @@ helm install kafka-2-kafka -f $VALUES_FILE  --namespace kafka-2 --set disableHos
 helm install kafka-2-schemaregistry -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set schemaregistry.enabled=true ./confluent-operator
 ```
 
+### Interact with Kafka 
+
 Verify and Test Kafka
 ```
 kubectl get kafka -n kafka-2 -oyaml | grep bootstrap.servers
