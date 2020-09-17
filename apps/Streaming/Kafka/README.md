@@ -37,7 +37,7 @@ Pull this repo.
 
 Download the Confluent Kafka Operator Bundle
 ```
-wget https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-20190726-v0.65.0.tar.gz
+wget https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-5.5.1.tar.gz
 cd <CONFLUENT_TAR_EXOPORT>/helm/
 ```
 
@@ -47,22 +47,38 @@ vi ../values.yaml
 export VALUES_FILE="../values.yaml"
 ```
 
+> Note the below snippet from `values.yaml` is what makes Kafka, ZK and other confluent components use Portworx.
+```
+storage:
+      ##
+      provisioner: kubernetes.io/portworx-volume
+      reclaimPolicy: Delete
+      allowVolumeExpansion: true
+      parameters:
+        repl: "2"
+```
+
 Install Kafka and Zookeeper
 ```
 helm install kafka-2-operator -f $VALUES_FILE --namespace kafka-2 --set operator.enabled=true ./confluent-operator
 
+(Remove `--set disableHostPort=true` if you have enough nodes)
 helm install kafka-2-zk -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set zookeeper.enabled=true ./confluent-operator
 
+(Remove `--set disableHostPort=true` if you have enough nodes)
 helm install kafka-2-kafka -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set kafka.enabled=true ./confluent-operator
 
+(Must not be using `--set disableHostPort=true` for Kakfa/ZK)
 helm install kafka-2-schemaregistry -f $VALUES_FILE  --namespace kafka-2 --set disableHostPort=true --set schemaregistry.enabled=true ./confluent-operator
 ```
+
+### Interact with Kafka 
 
 Verify and Test Kafka
 ```
 kubectl get kafka -n kafka-2 -oyaml | grep bootstrap.servers
 
-kubectl -n operator exec -it kafka-0 bash
+kubectl -n kafka-2 exec -it kafka-0 bash
 
 (kafka-0) cat << EOF > kafka.properties
 bootstrap.servers=kafka:9071
@@ -73,12 +89,16 @@ EOF
 
 (kafka-0) kafka-broker-api-versions --command-config kafka.properties --bootstrap-server kafka:9071
 
-(kafka-0) kafka-topics --create --zookeeper zookeeper.kafka-2.svc.cluster.local:2181/kafka-kafka-2 --replication-factor 3 --partitions 1 --topic example
+(kafka-0) kafka-topics --create --zookeeper zookeeper.kafka-2.svc.cluster.local:2181/kafka-kafka-2 --replication-factor 2 --partitions 1 --topic example
 
 (kafka-0) seq 10000 | kafka-console-producer --topic example --broker-list kafka:9071 --producer.config kafka.properties
 
 (kafka-0) kafka-console-consumer --from-beginning --topic example --bootstrap-server  kafka:9071 --consumer.config kafka.properties
-
+9997
+9998
+9999
+10000
+^CProcessed a total of 10000 messages
 ```
 
 ### PX Persistence 
@@ -170,3 +190,13 @@ Select destination cluster and start the restore job.
 kubectl exec -it kafka-0 -n kafka-2 -- bash
 (kafk-0) kafka-console-consumer --from-beginning --topic example --bootstrap-server  kafka:9071 --consumer.config kafka.properties
 ```
+
+### Cleanup Destination (restored)
+
+```
+$ oc -n kafka-2 delete zookeepercluster.cluster.confluent.com/zookeeper kafkacluster.cluster.confluent.com/kafka
+$ oc delete crd zookeeperclusters.cluster.confluent.com kafkaclusters.cluster.confluent.com
+$ oc delete ns kafka-2
+```
+
+You may also troubleshoot using https://access.redhat.com/solutions/4165791. If you delete namespace before CRDs or Finalizers it can get stuck `Terminating`

@@ -13,10 +13,10 @@ global:
           - us-east-1b
           - us-east-1c
     storage:
-      ## https://kubernetes.io/docs/concepts/storage/storage-classes/#gce
       ##
       provisioner: kubernetes.io/portworx-volume
       reclaimPolicy: Delete
+      allowVolumeExpansion: true
       parameters:
         repl: "2"
     ## Docker registry endpoint where Confluent Images are available.
