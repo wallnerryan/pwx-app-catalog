@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: <DEPLOYMENT_NAME>
+  labels:
+    purpose: fio-testing
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: <DEPLOYMENT_NAME>
+    spec:
+      containers:
+      - name: fio-container
+        image: wallnerryan/fiotools-aio
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: fio-data
+          mountPath: /myvol
+        env:
+          - name: REMOTEFILES
+            value: "https://gist.githubusercontent.com/wallnerryan/06cb07d3d8bee67af025a60a88da053f/raw/a46d97f30b79c2a2a6b42333e7114d85e84c450f/editablejob.fio"
+          - name: JOBFILES
+            value: editablejob.fio
+          - name: PLOTNAME
+            value: editablejob
+      volumes:
+      - name: fio-data
+        persistentVolumeClaim:
+          claimName: <PERSISTENT_VOLUME_CLAIM_NAME>

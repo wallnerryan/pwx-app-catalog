@@ -1,0 +1,18 @@
+
+config:
+  # supports openshift storage, Rook/Ceph, OpenEBS, Rancher Longhorn, StorageOS
+  # set to openshift, rook-ceph, openebs, longhorn, sos
+  platform: "pwx"
+  namespace: "default"
+  # supports any SC exists within namespace
+  storage_class: "pwx-storage-class"
+  volumes: 200
+  create_interval: 1
+  # supported values: \"ReadOnlyMany\", \"ReadWriteMany\", \"ReadWriteOnce\"",
+  access_mode: "ReadWriteOnce"
+  # Must be in format supported by PVC
+  gb_for_vol: "10Gi"
+  # uses volume.beta.kubernetes.io/storage-class
+  use_sc_annotation: False
+  # The app that adds load per pvc (in templates/)
+  load_app: "busybox.yaml"

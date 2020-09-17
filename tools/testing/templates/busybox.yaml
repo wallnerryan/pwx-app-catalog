@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: <DEPLOYMENT_NAME>
+  labels:
+    purpose: testing
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: <DEPLOYMENT_NAME>
+    spec:
+      containers:
+      - name: busybox-container
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo hello; sleep 10;done"]
+        image: busybox
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: data
+          mountPath: /myvol
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: <PERSISTENT_VOLUME_CLAIM_NAME>
