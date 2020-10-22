@@ -1,15 +1,13 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: <DEPLOYMENT_NAME>
   labels:
     purpose: fio-testing
 spec:
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: <DEPLOYMANT_NAME>
   replicas: 1
   template:
     metadata:
