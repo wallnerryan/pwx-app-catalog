@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+#
+# Copyright © 2020 Portworx
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Finds the usage of a PVC in Bytes Used and IO/s in progress
+#
+
+required="kubectl kubectl-pxc"
+
+for req in $required ; do
+    if ! which $req > /dev/null 2>&1 ; then
+        echo "$req is required"
+        exit
+    fi
+done
+
+
+if [ "$1" = "-n" ] ; then
+    NODE=$2
+    shift 2
+else
+    nodes=$(kubectl pxc node list -o json | jq -r '.[].hostname')
+    for node in $nodes ; do
+        status=$(kubectl pxc node get $node -o json | jq -r '.[].status')
+        if [ $status -eq 2 ] ; then
+            NODE=$node
+            break 1
+        fi
+    done
+fi
+
+if [ -z "$NODE" ] ; then
+    echo "Unable to find node that is online"
+    exit 1
+fi
+
+pvc=$1
+echo ">> Running pxctl on $NODE"
+pod=$(kubectl -n kube-system get pods -l name=portworx -o wide | grep "${NODE}" | awk -P '{print $1}')
+vol=$(kubectl -n kube-system exec -ti $pod -c portworx -- /bin/sh -c "PXCTL_AUTH_TOKEN=${PXC_TOKEN} /opt/pwx/bin/pxctl v l | grep $pvc | awk '{print \$1}'")
+vol=${vol//[^[:alnum:]]/}
+BYTES_USED=$(kubectl -n kube-system exec -ti $pod -c portworx -- /bin/sh -c "PXCTL_AUTH_TOKEN=${PXC_TOKEN} /opt/pwx/bin/pxctl v i ${vol} | grep 'Bytes used' | awk '{print \$4,\$5;}'")
+IOS_IN_PROGRESS=$(kubectl -n kube-system exec -ti $pod -c portworx -- /bin/sh -c "PXCTL_AUTH_TOKEN=${PXC_TOKEN} /opt/pwx/bin/pxctl v i ${vol} | grep 'IOs in progress' | awk '{print \$5;}'"
+echo
+echo "Volume usage for $vol"
+echo
+echo "Bytes used: $BYTES_USED"
+echo "IOs in progress: $IOS_IN_PROGRESS"
+echo
+
