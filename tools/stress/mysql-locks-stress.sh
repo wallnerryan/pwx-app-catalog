@@ -14,11 +14,8 @@ mysqlpass="$4"
 
 create_table () {
         local name=$1
-
-        echo "CREATE TABLE $name ( 
-        id INT, 
-        data VARCHAR(100) 
-);" | kubectl -n mysql exec $pod -- mysql --password=$mysqlpass --database=$db
+        echo "Creating table: $name"
+        kubectl -n mysql exec $pod -- mysql --password=$mysqlpass --database=$db -e "CREATE TABLE $name (  id INT,  data VARCHAR(100) );"
 }
 
 main () {
