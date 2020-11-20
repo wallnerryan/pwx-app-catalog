@@ -1,0 +1,80 @@
+# DEMO APP
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+    name: px-postgres-sc
+provisioner: kubernetes.io/portworx-volume
+parameters:
+   repl: "2"
+
+---
+
+##### Portworx persistent volume claim
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+   name: postgres-data
+   annotations:
+     volume.beta.kubernetes.io/storage-class: px-postgres-sc
+spec:
+   accessModes:
+     - ReadWriteOnce
+   resources:
+     requests:
+       storage: 10Gi
+---
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example-config
+data:
+  EXAMPLE_DB_HOST: postgres://postgres@postgres/example?sslmode=disable
+  EXAMPLE_DB_KIND: postgres
+  PGDATA: /var/lib/postgresql/data/pgdata
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: admin123
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      schedulerName: stork
+      containers:
+      - image: "postgres:10.1"
+        name: postgres
+        envFrom:
+        - configMapRef:
+            name: example-config
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-data
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-service
+spec:
+  selector:
+    app: postgres
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
