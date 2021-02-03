@@ -2,7 +2,7 @@
 
 ```
 kubectl create ns mongo-1
-kubectl create -f mongo-pwx.ym -n mongo-1
+kubectl create -f mongo-pwx.yml -n mongo-1
 ```
 
 > If you want to use different NS, update the ClusterRoleBinding namespace
