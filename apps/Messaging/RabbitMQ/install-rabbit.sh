@@ -4,7 +4,7 @@ kubectl create ns rabbitmq
 kubectl create ns monitoring
 kubectl create -f rabbit-sc.yaml
 
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo add stable https://charts.helm.sh/stable
 helm repo update
 helm install \
   rmq \
