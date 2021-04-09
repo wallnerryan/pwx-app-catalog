@@ -20,7 +20,7 @@ postgres=# # \q
 
 Initialize
 ```
-root@postgres-777dd9b54f-r4qfv:/# pgbench -U postgres -i -s 50  testdb
+root@postgres-777dd9b54f-r4qfv:/# pgbench -U postgres -i -s 50 -n testdb
 ```
 
 Run Test
