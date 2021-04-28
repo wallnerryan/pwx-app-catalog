@@ -6,6 +6,7 @@ parameters:
   io_priority: high
   repl: "2"
   group: "rmq_vg"
+  label: "rabbitmq"
 provisioner: kubernetes.io/portworx-volume
 allowVolumeExpansion: true
 reclaimPolicy: Delete
