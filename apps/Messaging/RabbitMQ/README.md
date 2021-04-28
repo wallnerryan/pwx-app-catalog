@@ -2,6 +2,11 @@
 
 ![Alt](https://i.imgur.com/MwB6ZmK.png)
 
+## Pre-reqs
+
+- Helm CLI
+- Python pika-1.2.0
+
 ## Install
 
 ```
