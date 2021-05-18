@@ -21,6 +21,9 @@ postgres=# # \q
 Initialize
 ```
 root@postgres-777dd9b54f-r4qfv:/# pgbench -U postgres -i -s 50 -n testdb
+or
+root@postgres-777dd9b54f-r4qfv:/# pgbench -i -s 50 -n testdb
+
 ```
 
 Run Test
@@ -28,6 +31,8 @@ Run Test
 root@postgres-777dd9b54f-r4qfv:/# pgbench -U postgres -c 10 -j 2 -t 10000 testdb
 or
 root@postgres-777dd9b54f-r4qfv:/# pgbench -U postgres -c 10 -j 2 -T 600 testdb
+or
+root@postgres-777dd9b54f-r4qfv:/# pgbench -c 10 -j 2 -T 600 testdb
 ```
 
 ## Params
