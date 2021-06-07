@@ -1,0 +1,40 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: edge-app-service
+spec:
+  selector:
+    app: edge-app
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edge-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edge-app
+  template:
+    metadata:
+      labels:
+        app: edge-app
+    spec:
+      containers:
+      - name: edge-app-container
+        image: wallnerryan/px-edge-app:v0.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: edge-persistent-storage
+          mountPath: /opt/iot/thermostat/sensor_data/
+      volumes:
+      - name: edge-persistent-storage
+        persistentVolumeClaim:
+          claimName: px-edge-pvc

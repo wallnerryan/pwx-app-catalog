@@ -1,0 +1,30 @@
+--- 
+#Allow specific IPs
+
+##### Portworx storage class
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: px-edge-sc-v4
+provisioner: kubernetes.io/portworx-volume
+parameters:
+  repl: "2"
+  sharedv4: "true"
+  sharedv4_svc_type: "LoadBalancer"
+  allow_ips: "192.168.101.101,192.168.101.102,192.168.101.103,45.13.123.101"
+  export_options: “insecure”
+allowVolumeExpansion: true
+---
+##### Portworx persistent volume claim
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: px-edge-pvc
+spec:
+  storageClassName: px-edge-sc-v4
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+
