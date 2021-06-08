@@ -1,0 +1,19 @@
+---
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: fio-job-config
+data:
+  fio.job: |-
+    [global]
+    direct=1
+    rw=randwrite
+    size=10g
+    numjobs=1
+    ioengine=libaio
+    iodepth=128
+    randrepeat=1
+    gtod_reduce=1
+    end_fsync=1
+    bs=16k
+    [test-randwrite-10G]
