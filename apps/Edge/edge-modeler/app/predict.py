@@ -94,8 +94,8 @@ x_train_data=np.reshape(x_train_data,(x_train_data.shape[0],x_train_data.shape[1
 
 # Train into LSTM Model
 lstm_model=Sequential()
-lstm_model.add(LSTM(units=50,return_sequences=True,input_shape=(np.shape(x_train_data)[1],1)))
-lstm_model.add(LSTM(units=50))
+lstm_model.add(LSTM(units=50,activation='relu',return_sequences=True,input_shape=(np.shape(x_train_data)[1],1)))
+lstm_model.add(LSTM(units=50, activation='relu'))
 lstm_model.add(Dense(1))
 model_data=data[len(data)-len(valid_data)-60:].values
 model_data=model_data.reshape(-1,1)
@@ -140,10 +140,11 @@ plt.savefig('static/temp_over_time_post_prediction.png')
 #futures (24 Hours)
 X_FUTURE = 24
 predictions = np.array([])
-last = X_test[-1]
+#last = X_test[-1]
+last = x_train_data[-1]
 for i in range(X_FUTURE):
   curr_prediction = lstm_model.predict(np.array([last]))
-  #print(curr_prediction)
+  print(curr_prediction)
   last = np.concatenate([last[1:], curr_prediction])
   predictions = np.concatenate([predictions, curr_prediction[0]])
 predictions = scaler.inverse_transform([predictions])[0]

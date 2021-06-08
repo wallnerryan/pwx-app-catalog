@@ -1,21 +1,35 @@
 <html>
   <head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <title>Flask App</title>
+
+    <style type='text/css'>
+    body {
+        margin: 10px;
+        padding: 10px;
+    }
+    </style>
   </head>
   <body>
     <h1>{{message}}</h1>
-
-    <h5 align="right">Truncate Data (Reduce size)</h5>
-    <p align="right"><a href=truncate ><button class=grey style="height:25px;width:125px">Reduce Data Size</button></a></p>
 
     <p>Portworx at Edge: Deep Machine Learning with Keras (on Tensorflow 2.0)</p>
     <p> - Portworx Sharedv4 at the edge is streaming data from an IoT thermostat. You can view live data of this IoT device, or run priductions on the last 50,000 data points using Tensorflow 2.0. The ML model is produced at the core Kubernetes infrastructure while the edge collects data.</p>
 
     <h5 align="center">View Live Data</h5>
-    <p align="center"><a href=graph ><button class=grey style="height:75px;width:150px">Live Data</button></a></p>
+    <p align="center"><a href=graph ><button class="btn btn-primary">Live Data</button></a></p>
 
     <h5 align="center">Run Prediction - (This takes some time to process and load, please be patient)</h5>
-    <p align="center"><a href=predict ><button class=grey style="height:75px;width:150px">Run Prediction</button></a></p>
+    <p align="center"><a href=predict ><button class="btn btn-primary">Run Prediction</button></a></p>
 
+    <h5 align="center">Truncate Data (Reduce size)</h5>
+    <p align="center"><a href=truncate ><button class="btn btn-primary">Reduce Data Size</button></a></p>
   </body>
 ˘
