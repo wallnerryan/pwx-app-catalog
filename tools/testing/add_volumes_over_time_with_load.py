@@ -7,6 +7,7 @@ import os
 
 # Configs can be set in Configuration class directly or using helper utilities
 settings = yaml.safe_load(open("config.yaml"))
+settings = settings['config']
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 config.load_kube_config()
 
