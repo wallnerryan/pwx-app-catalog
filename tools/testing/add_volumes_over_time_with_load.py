@@ -22,12 +22,13 @@ def deploy_load_pod(pod_name, pvc_name, file_name):
         dep = yaml.safe_load(f)
         # Edit dep
         dep['metadata']['name'] = pod_name
+        dep['spec']['selector']['matchLabels']['app'] = pod_name
         dep['spec']['template']['metadata']['labels']['app'] = pod_name
         dep['spec']['template']['spec']['volumes'][0]['persistentVolumeClaim']['claimName'] = pvc_name
         print(yaml.dump(dep))
         # deploy
-        k8s_beta = client.ExtensionsV1beta1Api()
-        resp = k8s_beta.create_namespaced_deployment(
+        k8s_apps_v1 = client.AppsV1Api()
+        resp = k8s_apps_v1.create_namespaced_deployment(
             body=yaml.load(yaml.dump(dep)), namespace=settings['namespace'])
         print("Deployment created. status='%s'" % str(resp.status))
 
