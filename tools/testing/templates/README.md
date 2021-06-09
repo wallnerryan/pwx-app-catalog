@@ -114,7 +114,7 @@ config:
 python add_volumes_over_time_with_load.py 
 ```
 
-Run 50 deployments, 2 per node, using HOSTNAME topologySpreadConstraints (k8s 1.19+)
+Run 100 deployments, 2 per node, using HOSTNAME topologySpreadConstraints (k8s 1.19+)
 ```
 config:
   # supports openshift storage, Rook/Ceph, OpenEBS, Rancher Longhorn, StorageOS
@@ -123,7 +123,7 @@ config:
   namespace: "stress"
   # supports any SC exists within namespace
   storage_class: "ocs-storagecluster-ceph-rbd"
-  volumes: 50
+  volumes: 100
   create_interval: 0
   # supported values: \"ReadOnlyMany\", \"ReadWriteMany\", \"ReadWriteOnce\"",
   access_mode: "ReadWriteOnce"
