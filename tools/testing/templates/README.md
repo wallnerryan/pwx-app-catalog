@@ -114,7 +114,7 @@ config:
 python add_volumes_over_time_with_load.py 
 ```
 
-Run 100 deployments, 2 per node, using HOSTNAME topologySpreadConstraints (k8s 1.19+)
+Run 100 deployments, 2 per OCS node, using cluster.ocs.openshift.io/openshift-storage topologySpreadConstraints (k8s 1.19+)
 ```
 config:
   # supports openshift storage, Rook/Ceph, OpenEBS, Rancher Longhorn, StorageOS
@@ -140,7 +140,7 @@ config:
     spec:
       topologySpreadConstraints:
       - maxSkew: 2
-        topologyKey: kubernetes.io/hostname
+        topologyKey: cluster.ocs.openshift.io/openshift-storage
         whenUnsatisfiable: DoNotSchedule
         labelSelector:
         matchLabels:
