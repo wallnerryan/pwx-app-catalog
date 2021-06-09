@@ -15,6 +15,6 @@ data:
     randrepeat=1
     gtod_reduce=1
     end_fsync=1
-    exec_prerun="echo 3 > /proc/sys/vm/drop_caches"
+    exec_prerun=echo 3 > /proc/sys/vm/drop_caches
     bs=16k
     [test-randrw-10G]
