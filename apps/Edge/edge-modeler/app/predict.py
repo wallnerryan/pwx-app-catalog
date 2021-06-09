@@ -39,11 +39,11 @@ df.index = df['Date']
 # tonum is your 80 in 80/20 train/test
 # fromnum is your 20 in 80/20 train/test
 step=5
-tonum=8000
-fromnum=8000
+tonum=9000
+fromnum=9000
 
 # Reduce size to 50,000
-df = df.tail(50000)
+df = df.tail(60000)
 #every 10th row = 5,000 sampled records
 df = df.iloc[::step, :]
 

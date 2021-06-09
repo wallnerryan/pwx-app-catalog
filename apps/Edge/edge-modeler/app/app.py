@@ -29,7 +29,7 @@ def run_truncate():
     # Test Data
     #data = open("example-data/sensor_data.csv", "r")
     lines = data.readlines()
-    last_lines = lines[-55000:]
+    last_lines = lines[-65000:]
     data.close()
     filename = "/opt/iot/thermostat/sensor_data/edge_sensor_records.csv"
     data = open(filename, "r")
