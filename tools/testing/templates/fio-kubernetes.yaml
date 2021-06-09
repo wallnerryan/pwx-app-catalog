@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: fio
-        image: wallnerryan/fio:3.19
+        image: wallnerryan/fio:3.27
         command: ["sh"]
         args: ["-c", "echo ${HOSTNAME} && mkdir -p /scratch/${HOSTNAME} && fio /configs/fio.job --eta=never --directory=/scratch/${HOSTNAME}"]
         volumeMounts:
