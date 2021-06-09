@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <DEPLOYMENT_NAME>
+  labels:
+    purpose: testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: <DEPLOYMENT_NAME>
+  template:
+    metadata:
+      labels:
+        app: <DEPLOYMENT_NAME>
+    spec:
+      containers:
+      - name: fio
+        image: wallnerryan/fio:3.19
+        command: ["sh"]
+        args: ["-c", "echo ${HOSTNAME} && mkdir -p /scratch/${HOSTNAME} && fio /configs/fio.job --eta=never --directory=/scratch/${HOSTNAME}"]
+        volumeMounts:
+        - name: fio-config-vol
+          mountPath: /configs
+        - name: fio-data
+          mountPath: /scratch
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+      restartPolicy: Always
+      volumes:
+      - name: fio-data
+        persistentVolumeClaim:
+          claimName: <PERSISTENT_VOLUME_CLAIM_NAME>
+      - name: fio-config-vol
+        configMap:
+          name: fio-job-config

@@ -1,0 +1,20 @@
+---
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: fio-job-config
+data:
+  fio.job: |-
+    [global]
+    direct=1
+    rw=randrw
+    size=10g
+    numjobs=1
+    ioengine=libaio
+    iodepth=128
+    randrepeat=1
+    gtod_reduce=1
+    end_fsync=1
+    exec_prerun=echo 3 > /proc/sys/vm/drop_caches
+    bs=16k
+    [test-randrw-10G]
