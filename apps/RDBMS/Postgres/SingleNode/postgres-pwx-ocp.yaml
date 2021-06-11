@@ -1,0 +1,90 @@
+##### Portworx persistent volume claim
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+   name: postgres-data
+   labels:
+     app: postgres
+spec:
+   storageClassName: pwx-storage-class
+   accessModes:
+     - ReadWriteOnce
+   resources:
+     requests:
+       storage: 300Gi
+---
+
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-secret-config
+  labels:
+     app: postgres
+type: Opaque
+data:
+  # user
+  username: dXNlcg==
+  # mysecretpassword
+  password: bXlzZWNyZXRwYXNzd29yZA==
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example-config
+  labels:
+     app: postgres
+data:
+  EXAMPLE_DB_HOST: postgres://postgres@postgres/example?sslmode=disable
+  EXAMPLE_DB_KIND: postgres
+  PGDATA: /var/lib/postgresql/data/pgdata
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+     app: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      securityContext:
+        fsGroup: 1000
+      schedulerName: stork
+      containers:
+      - image: "postgres:13.3"
+        name: postgres
+        envFrom:
+        - configMapRef:
+            name: example-config
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: database-secret-config
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-secret-config
+              key: password
+        securityContext:
+          runAsUser: 1000
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-data
