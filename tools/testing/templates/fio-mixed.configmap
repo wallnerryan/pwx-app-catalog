@@ -1,0 +1,55 @@
+---
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: fio-job-config
+data:
+  fio.job: |-
+    [global]
+    direct=1
+    size=10g
+    numjobs=1
+    ioengine=libaio
+    iodepth=128
+    randrepeat=1
+    end_fsync=1
+    exec_prerun=sh -c "echo 3  >/proc/sys/vm/drop_caches"
+
+    [4k-test-randread]
+    bs=4k
+    rw=randread
+
+    [4k-test-randwrite]
+    stonewall
+    bs=4k
+    rw=randwrite
+
+    [16k-test-randread]
+    stonewall
+    bs=16k
+    rw=randread
+    
+    [16k-test-randwrite]
+    stonewall
+    bs=16k
+    rw=randwrite
+
+    [32k-test-randread]
+    stonewall
+    bs=32k
+    rw=randread
+
+    [32k-test-randwrite]
+    stonewall
+    bs=32k
+    rw=randwrite
+
+    [64k-test-randread]
+    stonewall
+    bs=64k
+    rw=randread
+
+    [64k-test-randwrite]
+    stonewall
+    bs=64k
+    rw=randwrite
