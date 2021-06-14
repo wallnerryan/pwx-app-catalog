@@ -20,11 +20,19 @@ headers = ['Temperature', 'Humidity', 'Date']
 #dirname = os.path.dirname(__file__)
 #filename = os.path.join(dirname, 'example-data/sensor_data.csv')
 #df = pd.read_csv(filename, names=headers)
-# Production Data
 
+
+def strip_datetime_ignore(str_x):
+    try:
+        return datetime.strptime(str_x, '%Y-%m-%d %H:%M:%S.%f')
+    except ValueError:
+        # on the off chance we landed square on the second.
+        return  datetime.strptime(str_x, '%Y-%m-%d %H:%M:%S')
+
+ Production Data
 df = pd.read_csv('/opt/iot/thermostat/sensor_data/edge_sensor_records.csv',names=headers)
 
-df['Date'] = df['Date'].map(lambda x: datetime.strptime(str(x), '%Y-%m-%d %H:%M:%S.%f'))
+df['Date'] = df['Date'].map(lambda x: strip_datetime_ignore(str(x)))
 df = df.set_index('Date')
 # resample data to hourly to smooth, and look at last 1 week
 df = df.resample('H').fillna("nearest").tail(168)
