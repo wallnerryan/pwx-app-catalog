@@ -27,7 +27,14 @@ headers = ['Temperature', 'Humidity', 'Date']
 # Production Data
 df = pd.read_csv('/opt/iot/thermostat/sensor_data/edge_sensor_records.csv',names=headers)
 
-df['Date'] = df['Date'].map(lambda x: datetime.strptime(str(x), '%Y-%m-%d %H:%M:%S.%f'))
+def strip_datetime_ignore(str_x):
+    try:
+        return datetime.strptime(str_x, '%Y-%m-%d %H:%M:%S.%f')
+    except ValueError:
+        # on the off chance we landed square on the second.
+        return  datetime.strptime(str_x, '%Y-%m-%d %H:%M:%S')
+
+df['Date'] = df['Date'].map(lambda x: strip_datetime_ignore(str(x)))
 df = df.astype({"Temperature": float})
 
 #subset to just temp prediction
