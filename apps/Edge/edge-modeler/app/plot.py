@@ -63,6 +63,8 @@ plt.gcf().autofmt_xdate()
 
 
 plt.figure(2, figsize=(20, 8))
+axes = plt.gca()
+axes.set_ylim([40,60])
 color_list = [CB91_Green, CB91_Amber,
               CB91_Purple, CB91_Violet]
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
@@ -75,6 +77,8 @@ plt.fill_between(x, z, alpha=.5)
 plt.savefig('static/humid_over_time.png')
 
 plt.figure(3, figsize=(20, 8))
+axes = plt.gca()
+axes.set_ylim([60,80])
 color_list = [CB91_Blue, CB91_Pink, CB91_Green, CB91_Amber,
               CB91_Purple, CB91_Violet]
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
