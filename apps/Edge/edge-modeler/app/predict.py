@@ -20,12 +20,12 @@ CB91_Amber = '#F5B14C'
 headers = ['Temperature', 'Humidity', 'Date']
 
 # Test Data
-dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'example-data/sensor_data.csv')
-df = pd.read_csv(filename, names=headers)
+#dirname = os.path.dirname(__file__)
+#filename = os.path.join(dirname, 'example-data/sensor_data.csv')
+#df = pd.read_csv(filename, names=headers)
 
 # Production Data
-#df = pd.read_csv('/opt/iot/thermostat/sensor_data/edge_sensor_records.csv',names=headers)
+df = pd.read_csv('/opt/iot/thermostat/sensor_data/edge_sensor_records.csv',names=headers)
 
 def strip_datetime_ignore(str_x):
     try:

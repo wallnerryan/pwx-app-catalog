@@ -57,4 +57,5 @@ kubectl create -f k8s/edge-app.yaml
 - https://machinelearningmastery.com/save-load-keras-deep-learning-models/
 - https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
 - https://stackoverflow.com/questions/65237843/predicting-stock-price-x-days-into-the-future-using-python-machine-learning
+- https://towardsdatascience.com/time-series-forecasting-with-recurrent-neural-networks-74674e289816
 - https://keras.io/
