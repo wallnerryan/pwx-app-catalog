@@ -15,6 +15,62 @@
         margin: 10px;
         padding: 10px;
     }
+
+    /* Popup container - can be anything you want */
+    .popup {
+      position: relative;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* The actual popup */
+    .popup .popuptext {
+      visibility: hidden;
+      width: 160px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px 0;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -80px;
+    }
+
+    /* Popup arrow */
+    .popup .popuptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+
+    /* Toggle this class - hide and show the popup */
+    .popup .show {
+      visibility: visible;
+      -webkit-animation: fadeIn 1s;
+      animation: fadeIn 1s;
+    }
+
+    /* Add animation (fade in the popup) */
+    @-webkit-keyframes fadeIn {
+      from {opacity: 0;} 
+      to {opacity: 1;}
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity:1 ;}
+    }
     </style>
     </head>
     <body>
@@ -27,7 +83,18 @@
     <p align="center"><a href=graph ><button class="btn btn-primary">Live Data</button></a></p>
 
     <h5 align="center">Run Prediction - (This takes some time to process and load, please be patient)</h5>
-    <p align="center"><a href=predict ><button class="btn btn-primary">Run Prediction</button></a></p>
+    <div class="popup" onclick="myFunction()">
+      <span class="popuptext" id="myPopup">Running Prediction...</span>
+      <p align="center"><a href=predict ><button class="btn btn-primary">Run Prediction</button></a></p>
+    </div>
+
+    <script>
+    // When the user clicks on div, open the popup
+    function myFunction() {
+      var popup = document.getElementById("myPopup");
+      popup.classList.toggle("show");
+    }
+    </script>
 
     <h5 align="center">Truncate Data (Reduce size)</h5>
     <p align="center"><a href=truncate ><button class="btn btn-primary">Reduce Data Size</button></a></p>
