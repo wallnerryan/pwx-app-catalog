@@ -20,12 +20,12 @@ CB91_Amber = '#F5B14C'
 headers = ['Temperature', 'Humidity', 'Date']
 
 # Test Data
-#dirname = os.path.dirname(__file__)
-#filename = os.path.join(dirname, 'example-data/sensor_data.csv')
-#df = pd.read_csv(filename, names=headers)
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'example-data/sensor_data.csv')
+df = pd.read_csv(filename, names=headers)
 
 # Production Data
-df = pd.read_csv('/opt/iot/thermostat/sensor_data/edge_sensor_records.csv',names=headers)
+#df = pd.read_csv('/opt/iot/thermostat/sensor_data/edge_sensor_records.csv',names=headers)
 
 def strip_datetime_ignore(str_x):
     try:
@@ -42,12 +42,13 @@ df = df[['Date', 'Temperature']]
 #print(df.dtypes)
 df.index = df['Date']
 
-# Devid 50,000 by step
+# Divide 60,000 by step
 # tonum is your 80 in 80/20 train/test
 # fromnum is your 20 in 80/20 train/test
 step=5
 tonum=9000
 fromnum=9000
+forcastfrom=4000
 
 # Reduce size to 50,000
 df = df.tail(60000)
@@ -88,8 +89,6 @@ print(len(final_data))
 # 60/40
 train_data=final_data[0:tonum,:]
 valid_data=final_data[fromnum:,:]
-#print(train_data)
-#print(valid_data)
 scaler=MinMaxScaler(feature_range=(0,1))
 scaled_data=scaler.fit_transform(final_data)
 x_train_data,y_train_data=[],[]
@@ -148,23 +147,34 @@ plt.plot(valid_data["Predictions"], '--r', linewidth=3)
 #plt.fill_between(df.index, valid_data["Predictions"], alpha=.5)
 plt.savefig('static/temp_over_time_post_prediction.png')
 
-#futures (24 Hours)
-X_FUTURE = 24
+# multiply by timedelta below
+X_FUTURE = 3000
+
+# forcast_data=final_data[forcastfrom:,:]
+
+# scaler=MinMaxScaler(feature_range=(0,1))
+# scaled_forcast_data=scaler.fit_transform(final_data)
+# x_forcast_data=[]
+# for i in range(60,len(forcast_data)):
+#     x_forcast_data.append(scaled_forcast_data[i-60:i,0])
+
+# x_forcast_data=np.array(x_forcast_data)
+# x_forcast_data=np.reshape(x_forcast_data,(x_forcast_data.shape[0],x_forcast_data.shape[1],1))
+
 predictions = np.array([])
-#last = X_test[-1]
+# last = x_forcast_data[-1]
 last = x_train_data[-1]
 for i in range(X_FUTURE):
   curr_prediction = lstm_model.predict(np.array([last]))
-  print(curr_prediction)
   last = np.concatenate([last[1:], curr_prediction])
   predictions = np.concatenate([predictions, curr_prediction[0]])
 predictions = scaler.inverse_transform([predictions])[0]
-#print(predictions)
+print(predictions)
 
 dicts = []
 curr_date = data.index[-1]
 for i in range(X_FUTURE):
-  curr_date = curr_date + timedelta(hours=1)
+  curr_date = curr_date + timedelta(seconds=1)
   dicts.append({'Predictions':predictions[i], "Date": curr_date})
 
 new_data = pd.DataFrame(dicts).set_index("Date")
@@ -172,10 +182,11 @@ new_data = pd.DataFrame(dicts).set_index("Date")
 plt.figure(4, figsize=(12, 4))
 color_list = [CB91_Amber]
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
-plt.plot(df["Temperature"],label='Temp History')
-plt.plot(new_data['Predictions'],'--b')
+plt.plot(df["Temperature"][fromnum:],label='Temp History')
+# show 15 minutes of forcast data
+plt.plot(new_data['Predictions'][:900],'--b', label='Temp prediction')
 plt.grid()
 axes = plt.gca()
 axes.set_ylim([60,80])
-plt.fill_between(df.index, df["Temperature"], alpha=.5)
+plt.fill_between(df.index[fromnum:], df["Temperature"][fromnum:], alpha=.5)
 plt.savefig('static/temp_over_time_future_prediction.png')
