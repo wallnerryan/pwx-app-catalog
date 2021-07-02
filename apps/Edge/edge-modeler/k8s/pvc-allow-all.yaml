@@ -11,7 +11,7 @@ parameters:
   sharedv4: "true"
   sharedv4_svc_type: "LoadBalancer" 
   allow_all_ips: "true"
-  export_options: “insecure”
+  export_options: "insecure"
 allowVolumeExpansion: true
 ---
 ##### Portworx persistent volume claim

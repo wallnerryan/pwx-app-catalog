@@ -82,3 +82,4 @@ kubectl create -f k8s/edge-app.yaml
 - https://towardsdatascience.com/time-series-forecasting-with-recurrent-neural-networks-74674e289816
 - https://keras.io/
 - https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/
+- https://eksctl.io/usage/gpu-support/
