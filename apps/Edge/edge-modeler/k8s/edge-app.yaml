@@ -1,3 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: px-edge-config
+data:
+  config.yaml: |
+    config:
+      plot_lookback_hours: 336
+      plot_ylimit_hum_low: 40
+      plot_ylimit_hum_high: 60
+      plot_ylimit_temp_low: 50
+      plot_ylimit_temp_high: 100
+      plot_figsize_x: 20
+      plot_figsize_y: 8
+      predict_step: 5
+      predict_tonum: 9000
+      predict_fromnum: 9000
+      predict_forcastfrom: 4000
+      predict_training_records: 60000
+      predict_plot_figsize_x: 12
+      predict_plot_figsize_y: 4
+      predict_x_future_seconds: 3000
+      predict_x_future_seconds_graph: 900
+      data_path: "/opt/iot/thermostat/sensor_data/edge_sensor_records.csv"
+---
 kind: Service
 apiVersion: v1
 metadata:
@@ -27,14 +52,22 @@ spec:
     spec:
       containers:
       - name: edge-app-container
-        image: wallnerryan/px-edge-app:v0.2
+        image: wallnerryan/px-edge-app:v0.2.14
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
         volumeMounts:
         - name: edge-persistent-storage
           mountPath: /opt/iot/thermostat/sensor_data/
+        - name: config-volume
+          mountPath: /app/config.yaml
+          subPath: config.yaml
+      nodeSelector:
+        node-type/gpu: "true"
       volumes:
       - name: edge-persistent-storage
         persistentVolumeClaim:
           claimName: px-edge-pvc
+      - name: config-volume
+        configMap:
+          name: px-edge-config

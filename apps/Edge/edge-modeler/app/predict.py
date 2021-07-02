@@ -4,10 +4,11 @@ from datetime import datetime
 from datetime import timedelta
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM,Dropout,Dense
+from tensorflow.keras.layers import ,Dropout,Dense
 from sklearn.preprocessing import MinMaxScaler
 import csv
 import os
+import yaml
 
 CB91_Blue = '#2CBDFE'
 CB91_Green = '#47DBCD'
@@ -19,13 +20,11 @@ CB91_Amber = '#F5B14C'
 
 headers = ['Temperature', 'Humidity', 'Date']
 
-# Test Data
-#dirname = os.path.dirname(__file__)
-#filename = os.path.join(dirname, 'example-data/sensor_data.csv')
-#df = pd.read_csv(filename, names=headers)
+settings = yaml.safe_load(open("config.yaml"))
+settings = settings['config']
 
-# Production Data
-df = pd.read_csv('/opt/iot/thermostat/sensor_data/edge_sensor_records.csv',names=headers)
+#Data
+df = pd.read_csv(settings['data_path'],names=headers)
 
 def strip_datetime_ignore(str_x):
     try:
@@ -45,13 +44,14 @@ df.index = df['Date']
 # Divide 60,000 by step
 # tonum is your 80 in 80/20 train/test
 # fromnum is your 20 in 80/20 train/test
-step=5
-tonum=9000
-fromnum=9000
-forcastfrom=4000
+step=settings['predict_step']
+tonum=settings['predict_tonum']
+fromnum=settings['predict_fromnum']
+forcastfrom=settings['predict_forcastfrom']
 
-# Reduce size to 50,000
-df = df.tail(60000)
+# of records
+df = df.tail(settings['predict_training_records'])
+
 #every 10th row = 5,000 sampled records
 df = df.iloc[::step, :]
 
@@ -61,13 +61,13 @@ t_nintey = df['Temperature'].quantile(0.90)
 df["Temperature"] = np.where(df["Temperature"] < t_ten, t_ten,df['Temperature'])
 df["Temperature"] = np.where(df["Temperature"] > t_nintey, t_nintey,df['Temperature'])
 
-plt.figure(2, figsize=(12, 4))
+plt.figure(2, figsize=(settings['predict_plot_figsize_x'], settings['predict_plot_figsize_y']))
 color_list = [CB91_Blue, CB91_Green]
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 plt.plot(df["Temperature"],label='Temp History')
 plt.grid()
 axes = plt.gca()
-axes.set_ylim([60,80])
+axes.set_ylim([settings['plot_ylimit_temp_low'],settings['plot_ylimit_temp_high']])
 plt.fill_between(df.index, df["Temperature"], alpha=.5)
 plt.savefig('static/temp_over_time_pre_prediction.png')
 
@@ -135,20 +135,21 @@ train_data=data[:tonum]
 valid_data=data[fromnum:]
 
 valid_data['Predictions']=predicted_temperature
-plt.figure(3, figsize=(12, 4))
+plt.figure(3, figsize=(settings['predict_plot_figsize_x'], settings['predict_plot_figsize_y']))
 color_list = [CB91_Purple, CB91_Violet]
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 plt.grid()
 plt.plot(train_data["Temperature"],linewidth=1)
 axes = plt.gca()
-axes.set_ylim([60,80])
+axes.set_ylim([settings['plot_ylimit_temp_low'],settings['plot_ylimit_temp_high']])
 plt.fill_between(df.index, df["Temperature"], alpha=.5)
 plt.plot(valid_data["Predictions"], '--r', linewidth=3)
 #plt.fill_between(df.index, valid_data["Predictions"], alpha=.5)
 plt.savefig('static/temp_over_time_post_prediction.png')
 
 # multiply by timedelta below
-X_FUTURE = 3000
+X_FUTURE=settings['predict_x_future_seconds']
+X_FUTURE_GRAPH =settings['predict_x_future_seconds_graph']
 
 # forcast_data=final_data[forcastfrom:,:]
 
@@ -179,14 +180,14 @@ for i in range(X_FUTURE):
 
 new_data = pd.DataFrame(dicts).set_index("Date")
 
-plt.figure(4, figsize=(12, 4))
+plt.figure(4, figsize=(settings['predict_plot_figsize_x'], settings['predict_plot_figsize_y']))
 color_list = [CB91_Amber]
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 plt.plot(df["Temperature"][fromnum:],label='Temp History')
 # show 15 minutes of forcast data
-plt.plot(new_data['Predictions'][:900],'--b', label='Temp prediction')
+plt.plot(new_data['Predictions'][:X_FUTURE_GRAPH],'--b', label='Temp prediction')
 plt.grid()
 axes = plt.gca()
-axes.set_ylim([60,80])
+axes.set_ylim([settings['plot_ylimit_temp_low'],settings['plot_ylimit_temp_high']])
 plt.fill_between(df.index[fromnum:], df["Temperature"][fromnum:], alpha=.5)
 plt.savefig('static/temp_over_time_future_prediction.png')

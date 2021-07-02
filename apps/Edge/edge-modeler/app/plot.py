@@ -5,6 +5,7 @@ import csv
 import os
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import yaml
 
 
 CB91_Blue = '#2CBDFE'
@@ -16,11 +17,8 @@ CB91_Amber = '#F5B14C'
 
 headers = ['Temperature', 'Humidity', 'Date']
 
-# Test Data
-#dirname = os.path.dirname(__file__)
-#filename = os.path.join(dirname, 'example-data/sensor_data.csv')
-#df = pd.read_csv(filename, names=headers)
-
+settings = yaml.safe_load(open("config.yaml"))
+settings = settings['config']
 
 def strip_datetime_ignore(str_x):
     try:
@@ -29,13 +27,13 @@ def strip_datetime_ignore(str_x):
         # on the off chance we landed square on the second.
         return  datetime.strptime(str_x, '%Y-%m-%d %H:%M:%S')
 
-#Production Data
-df = pd.read_csv('/opt/iot/thermostat/sensor_data/edge_sensor_records.csv',names=headers)
+#Data
+df = pd.read_csv(settings['data_path'],names=headers)
 
 df['Date'] = df['Date'].map(lambda x: strip_datetime_ignore(str(x)))
 df = df.set_index('Date')
 # resample data to hourly to smooth, and look at last 1 week
-df = df.resample('H').fillna("nearest").tail(168)
+df = df.resample('H').fillna("nearest").tail(settings['plot_lookback_hours'])
 x = df.index
 y = df['Temperature']
 z = df['Humidity']
@@ -62,9 +60,9 @@ print(df['Humidity'].skew())
 plt.gcf().autofmt_xdate()
 
 
-plt.figure(2, figsize=(20, 8))
+plt.figure(2, figsize=(settings['plot_figsize_x'], settings['plot_figsize_y']))
 axes = plt.gca()
-axes.set_ylim([40,60])
+axes.set_ylim([settings['plot_ylimit_hum_low'],settings['plot_ylimit_hum_high']])
 color_list = [CB91_Green, CB91_Amber,
               CB91_Purple, CB91_Violet]
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
@@ -76,9 +74,9 @@ plt.fill_between(x, z, alpha=.5)
 
 plt.savefig('static/humid_over_time.png')
 
-plt.figure(3, figsize=(20, 8))
+plt.figure(3, figsize=(settings['plot_figsize_x'], settings['plot_figsize_y']))
 axes = plt.gca()
-axes.set_ylim([60,80])
+axes.set_ylim([settings['plot_ylimit_temp_low'],settings['plot_ylimit_temp_high']])
 color_list = [CB91_Blue, CB91_Pink, CB91_Green, CB91_Amber,
               CB91_Purple, CB91_Violet]
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
