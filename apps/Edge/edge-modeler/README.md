@@ -81,3 +81,4 @@ kubectl create -f k8s/edge-app.yaml
 - https://stackoverflow.com/questions/65237843/predicting-stock-price-x-days-into-the-future-using-python-machine-learning
 - https://towardsdatascience.com/time-series-forecasting-with-recurrent-neural-networks-74674e289816
 - https://keras.io/
+- https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/
