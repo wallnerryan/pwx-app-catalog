@@ -1,4 +1,4 @@
-FROM python:3.9.5-buster
+FROM tensorflow/tensorflow:latest-gpu
 
 ADD app/ /app
 WORKDIR /app

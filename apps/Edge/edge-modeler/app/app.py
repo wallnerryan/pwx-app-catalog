@@ -32,7 +32,7 @@ def run_truncate():
     last_lines = lines[-65000:]
     data.close()
     filename = "/opt/iot/thermostat/sensor_data/edge_sensor_records.csv"
-    data = open(filename, "r")
+    data = open(filename, "w")
     # Test Data
     #data = open("example-data/sensor_data.csv", "r")
     data.writelines(last_lines)
