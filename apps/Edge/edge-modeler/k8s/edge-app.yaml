@@ -62,6 +62,9 @@ spec:
         - name: config-volume
           mountPath: /app/config.yaml
           subPath: config.yaml
+        resources:
+          limits:
+            nvidia.com/gpu: 1
       nodeSelector:
         node-type/gpu: "true"
       volumes:

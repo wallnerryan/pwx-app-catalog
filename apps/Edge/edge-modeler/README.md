@@ -25,6 +25,26 @@ The Long Short-Term Memory network, or LSTM network, is a recurrent neural netwo
 
 #### Setup
 
+##### EKS
+
+Example EKS (eksctl) cluster tempalte in `eks`. Note this launches 4 PX nodes, 3 m5 nodes and 1 p3 GPU node.
+
+Nodes should be labeled with `node-type/gpu=true` such as `kubectl label no ip-192-168-29-252.ec2.internal node-type/gpu=true`
+
+Current there is also a bug where EKS does not run docker in correct cgroup owner for GPU (p3) node. Modify systemd ot cgroupfs.
+```
+vi /etc/kubernetes/kubelet/kubelet-config.json 
+systemctl daemon-reload
+systemctl restart kubelet.service
+```
+
+Then install PX
+```
+kubectl apply -f 'https://install.portworx.com/2.8.0?mc=false&kbver=1.20.4-eks-6b7464&b=true&s=%22type%3Dgp2%2Csize%3D150%22&kd=type%3Dgp2%2Csize%3D150&c=px-cluster-fefd3cfc-632c-4d5f-91bd-d8e20a439843&eks=true&stork=true&st=k8s'
+```
+
+##### K8s App
+
 Create Shareedv4 Volume + Service with dummy pod.
 ```
 kubectl create -f k8s/pvc-allow-all.yaml
