@@ -1,6 +1,8 @@
 
 ## Portworx at Edge: Deep Machine Learning with Keras (on Tensorflow 2.0)
 
+![Architecture](images/arch.png)
+
 ### PX-Edge-App
 
 This application uses Keras for deep machine learning of IoT data. Keras is a high-level API that is built on top of TensorFlow. It is extremely user-friendly and comparatively easier than TensorFlow. 
