@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
       - name: edge-app-container
-        image: wallnerryan/px-edge-app:v0.2.14
+        image: wallnerryan/px-edge-app:v0.2.16
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
