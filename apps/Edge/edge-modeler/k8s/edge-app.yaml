@@ -12,18 +12,18 @@ data:
       plot_ylimit_temp_high: 100
       plot_figsize_x: 20
       plot_figsize_y: 8
-      predict_lstm_units: 128
+      predict_lstm_units: 32
       predict_lstm_epochs: 1
       predict_lstm_batchsize: 1
       predict_lstm_activation: "sigmoid"
-      predict_step: 4
-      predict_tonum: 12000
-      predict_fromnum: 12000
+      predict_step: 2
+      predict_tonum: 24000
+      predict_fromnum: 24000
       predict_training_records: 60000
       predict_plot_figsize_x: 12
       predict_plot_figsize_y: 4
-      predict_x_future_seconds: 7200
-      predict_x_future_seconds_graph: 7200
+      predict_x_future_seconds: 3600
+      predict_x_future_seconds_graph: 3600
       data_path: "/opt/iot/thermostat/sensor_data/edge_sensor_records.csv"
 ---
 kind: Service
@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
       - name: edge-app-container
-        image: wallnerryan/px-edge-app:v0.2.16
+        image: wallnerryan/px-edge-app:v0.2.18
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

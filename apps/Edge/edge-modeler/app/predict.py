@@ -170,8 +170,7 @@ new_data = pd.DataFrame(dicts).set_index("Date")
 plt.figure(4, figsize=(settings['predict_plot_figsize_x'], settings['predict_plot_figsize_y']))
 color_list = [CB91_Amber]
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
-plt.plot(df["Temperature"][fromnum:],label='Temp History')
-# show 15 minutes of forcast data
+plt.plot(df["Temperature"],label='Temp History')
 plt.plot(new_data['Predictions'][:X_FUTURE_GRAPH],'--b', label='Temp prediction')
 plt.grid()
 axes = plt.gca()
