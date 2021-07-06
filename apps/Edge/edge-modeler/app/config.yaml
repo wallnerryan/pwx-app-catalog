@@ -9,15 +9,20 @@ config:
   plot_figsize_x: 20
   plot_figsize_y: 8
   # predict
-  predict_step: 5
-  predict_tonum: 9000
-  predict_fromnum: 9000
-  predict_forcastfrom: 4000
+  predict_lstm_units: 32
+  predict_lstm_epochs: 1
+  predict_lstm_batchsize: 1
+  predict_lstm_activation: "relu"
+  #predict_lstm_activation: "sigmoid"
+  #predict_lstm_activation:
+  predict_step: 2
+  predict_tonum: 24000
+  predict_fromnum: 24000
   predict_training_records: 60000
   predict_plot_figsize_x: 12
   predict_plot_figsize_y: 4
-  predict_x_future_seconds: 3000
-  predict_x_future_seconds_graph: 900
+  predict_x_future_seconds: 3600
+  predict_x_future_seconds_graph: 3600
   # files
   #data_path: "example-data/sensor_data.csv"
   data_path: "/opt/iot/thermostat/sensor_data/edge_sensor_records.csv"

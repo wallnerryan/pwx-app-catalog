@@ -47,7 +47,6 @@ df.index = df['Date']
 step=settings['predict_step']
 tonum=settings['predict_tonum']
 fromnum=settings['predict_fromnum']
-forcastfrom=settings['predict_forcastfrom']
 
 # of records
 df = df.tail(settings['predict_training_records'])
@@ -102,9 +101,9 @@ x_train_data=np.reshape(x_train_data,(x_train_data.shape[0],x_train_data.shape[1
 
 # Train into LSTM Model
 lstm_model=Sequential()
-lstm_model.add(LSTM(units=50,activation='relu',return_sequences=True,input_shape=(np.shape(x_train_data)[1],1)))
-lstm_model.add(LSTM(units=50, activation='relu'))
-lstm_model.add(Dense(1))
+lstm_model.add(LSTM(units=settings['predict_lstm_units'],activation=settings['predict_lstm_activation'],return_sequences=True,input_shape=(np.shape(x_train_data)[1],1)))
+lstm_model.add(LSTM(units=settings['predict_lstm_units'], activation=settings['predict_lstm_activation']))
+lstm_model.add(Dense(1, activation=settings['predict_lstm_activation']))
 model_data=data[len(data)-len(valid_data)-60:].values
 model_data=model_data.reshape(-1,1)
 model_data=scaler.transform(model_data)
@@ -112,7 +111,7 @@ model_data=scaler.transform(model_data)
 
 # Train and Test Data
 lstm_model.compile(loss='mean_squared_error',optimizer='adam', metrics=['accuracy'])
-lstm_model.fit(x_train_data,y_train_data,epochs=1,batch_size=1,verbose=2)
+lstm_model.fit(x_train_data,y_train_data,epochs=settings['predict_lstm_epochs'],batch_size=settings['predict_lstm_batchsize'],verbose=2)
 X_test=[]
 for i in range(60,model_data.shape[0]):
     X_test.append(model_data[i-60:i,0])
@@ -130,7 +129,6 @@ f.write(acc)
 f.close()
 lstm_model.save("static/saved_model.h5")
 
-#70/30
 train_data=data[:tonum]
 valid_data=data[fromnum:]
 
@@ -150,17 +148,6 @@ plt.savefig('static/temp_over_time_post_prediction.png')
 # multiply by timedelta below
 X_FUTURE=settings['predict_x_future_seconds']
 X_FUTURE_GRAPH =settings['predict_x_future_seconds_graph']
-
-# forcast_data=final_data[forcastfrom:,:]
-
-# scaler=MinMaxScaler(feature_range=(0,1))
-# scaled_forcast_data=scaler.fit_transform(final_data)
-# x_forcast_data=[]
-# for i in range(60,len(forcast_data)):
-#     x_forcast_data.append(scaled_forcast_data[i-60:i,0])
-
-# x_forcast_data=np.array(x_forcast_data)
-# x_forcast_data=np.reshape(x_forcast_data,(x_forcast_data.shape[0],x_forcast_data.shape[1],1))
 
 predictions = np.array([])
 # last = x_forcast_data[-1]
