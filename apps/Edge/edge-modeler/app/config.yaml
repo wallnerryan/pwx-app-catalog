@@ -9,16 +9,16 @@ config:
   plot_figsize_x: 20
   plot_figsize_y: 8
   # predict
-  predict_lstm_units: 32
+  predict_lstm_units: 128
   predict_lstm_epochs: 1
   predict_lstm_batchsize: 1
   #predict_lstm_activation: "relu"
   predict_lstm_activation: "sigmoid"
   #predict_lstm_activation:
-  predict_step: 2
-  predict_tonum: 28000
-  predict_fromnum: 28000
-  predict_training_records: 70000
+  predict_step: 4
+  predict_tonum: 10000
+  predict_fromnum: 10000
+  predict_training_records: 50000
   predict_plot_figsize_x: 12
   predict_plot_figsize_y: 4
   predict_x_future_seconds: 3600
