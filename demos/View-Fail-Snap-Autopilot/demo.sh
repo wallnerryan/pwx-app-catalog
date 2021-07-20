@@ -94,7 +94,7 @@ pe "cat  ../../apps/RDBMS/Postgres/SingleNode/postgres-ap-rule.yaml"
 pe "kubectl create -f ../../apps/RDBMS/Postgres/SingleNode/postgres-ap-rule.yaml"
 
 # run command to fill DB
-pe "kubectl exec ${POD} -- pgbench -U user -i -s 75 pxdemo" 
+pe "kubectl exec ${POD} -- pgbench -U user -i -s 45 pxdemo" 
 
 # view output of AP rule
 pe "watch kubectl get events --field-selector involvedObject.kind=AutopilotRule --all-namespaces"
