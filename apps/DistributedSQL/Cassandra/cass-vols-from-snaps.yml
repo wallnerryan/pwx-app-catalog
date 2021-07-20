@@ -16,7 +16,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: cassandra-snap-data-cassandra-restored-0
+  name: cassandra-snap-data-cassandra-restored-1
   annotations:
     snapshot.alpha.kubernetes.io/snapshot: <REPLACE-2>
 spec:
@@ -31,7 +31,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: cassandra-snap-data-cassandra-restored-0
+  name: cassandra-snap-data-cassandra-restored-2
   annotations:
     snapshot.alpha.kubernetes.io/snapshot: <REPLACE-3>
 spec:
