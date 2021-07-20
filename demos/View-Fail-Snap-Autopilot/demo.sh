@@ -55,14 +55,14 @@ pe "kubectl get pvc | grep cassandra"
 # insert data, flush data
 CASSPOD=`kubectl get pods -l app=cassandra -o wide | head -n 2 | grep -v NAME | awk '{print $1}'`
 kubectl cp cass.cql default/cqlsh:/tmp/cass.cql
-kubectl cp cassa.cql default/cqlsh:/tmp/cass-select.cql
-kubectl cp cassa.cql default/cqlsh:/tmp/cass-drop.cql
+kubectl cp cass-select.cql default/cqlsh:/tmp/cass-select.cql
+kubectl cp cass-drop.cql default/cqlsh:/tmp/cass-drop.cql
 pe "kubectl exec cqlsh -- cqlsh cassandra-0.cassandra.default.svc.cluster.local --cqlversion=3.4.2 -f /tmp/cass.cql"
 pe "kubectl exec ${CASSPOD} -- nodetool flush"
 
 # take snapshot, view group snapshot
-pe "cat ../../apps/DistributedSQL/Cassandra/cass-group-snap.yaml"
-pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-group-snap.yaml"
+pe "cat ../../apps/DistributedSQL/Cassandra/cass-group-snap.yml"
+pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-group-snap.yml"
 pe "watch kubectl get volumesnapshots"
 
 # drop tables
@@ -72,10 +72,12 @@ pe "kubectl exec cqlsh -- cqlsh cassandra-0.cassandra.default.svc.cluster.local 
 snap1=`kubectl get volumesnapshot | sed -n '2p' |  grep -v NAME | awk '{print $1}'`
 snap2=`kubectl get volumesnapshot | sed -n '3p' |  grep -v NAME | awk '{print $1}'`
 snap3=`kubectl get volumesnapshot | sed -n '4p' |  grep -v NAME | awk '{print $1}'`
-sed -i 's/<REPLACE-1>/'$snap1'/g' cass-vols-from-snaps.yaml
-sed -i 's/<REPLACE-2>/'$snap1'/g' cass-vols-from-snaps.yaml
-sed -i 's/<REPLACE-3>/'$snap1'/g' cass-vols-from-snaps.yaml
-pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-from-snaps.yaml"
+sed -i 's/<REPLACE-1>/'$snap1'/g' cass-vols-from-snaps.yml
+sed -i 's/<REPLACE-2>/'$snap1'/g' cass-vols-from-snaps.yml
+sed -i 's/<REPLACE-3>/'$snap1'/g' cass-vols-from-snaps.yml
+pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml"
+pe "kubectl get pvc | grep restored"
+pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-from-snaps.yml"
 
 # view data valid
 pe "watch kubectl get pods -l app=cassandra-restored -o wide"
