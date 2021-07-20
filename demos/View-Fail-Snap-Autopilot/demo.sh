@@ -28,9 +28,9 @@ pe "kubectl exec -it ${PX_POD} -n kube-system -- /opt/pwx/bin/pxctl volume inspe
 
 # insert data
 POD=`kubectl get pods -l app=postgres | grep Running | grep 1/1 | awk '{print $1}'`
-pe "kubectl exec ${POD} -- psql -U $POSTGRES_USER -c 'create database pxdemo'" 
-pe "kubectl exec ${POD} -- pgbench -U $POSTGRES_USER -i -s 5 pxdemo" 
-pe "kubectl exec ${POD} -- psql -U $POSTGRES_USER -d pxdemo -c 'select count(*) from pgbench_accounts'" 
+pe "kubectl exec ${POD} -- psql -U user -c 'create database pxdemo'" 
+pe "kubectl exec ${POD} -- pgbench -U user -i -s 5 pxdemo" 
+pe "kubectl exec ${POD} -- psql -U user -d pxdemo -c 'select count(*) from pgbench_accounts'" 
 
 # ************ FAIL ************ #
 
@@ -44,7 +44,7 @@ pe "watch kubectl get pods -l app=postgres -o wide"
 # show same data is there. (uncordon node)
 kubectl uncordon ${NODE}
 POD=`kubectl get pods -l app=postgres | grep Running | grep 1/1 | awk '{print $1}'`
-pe "kubectl exec ${POD} -- psql -U $POSTGRES_USER -d pxdemo -c 'select count(*) from pgbench_accounts'" 
+pe "kubectl exec ${POD} -- psql -U user -d pxdemo -c 'select count(*) from pgbench_accounts'" 
 
 # ************ GROUP SNAP ************ #
 
@@ -91,7 +91,7 @@ pe "cat  ../../apps/RDBMS/Postgres/SingleNode/postgres-ap-rule.yaml"
 pe "kubectl create -f ../../apps/RDBMS/Postgres/SingleNode/postgres-ap-rule.yaml"
 
 # run command to fill DB
-pe "kubectl exec ${POD} -- pgbench -U $POSTGRES_USER -i -s 75 pxdemo" 
+pe "kubectl exec ${POD} -- pgbench -U user -i -s 75 pxdemo" 
 
 # view output of AP rule
 pe "watch kubectl get events --field-selector involvedObject.kind=AutopilotRule --all-namespaces"
