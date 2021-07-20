@@ -21,15 +21,16 @@ pe "kubectl create -f ../../apps/RDBMS/Postgres/SingleNode/postgres-pwx.yaml"
 kubectl create -f ../../apps/DistributedSQL/Cassandra/cassandra-pwx.yaml
 
 # view volume via pxctl
+pe "watch kubectl get po -l app=postgres"
 VOLS=`kubectl get pvc | grep postgres | awk '{print $3}'`
 PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
 pe "kubectl exec -it ${PX_POD} -n kube-system -- /opt/pwx/bin/pxctl volume inspect $VOLS"
 
 # insert data
 POD=`kubectl get pods -l app=postgres | grep Running | grep 1/1 | awk '{print $1}'`
-pe "kubectl exec ${POD} -- psql -c 'create database pxdemo'" 
-pe "kubectl exec ${POD} -- pgbench -i -s 5 pxdemo" 
-pe "kubectl exec ${POD} -- psql -d pxdemo -c 'select count(*) from pgbench_accounts'" 
+pe "kubectl exec ${POD} -- psql -U $POSTGRES_USER -c 'create database pxdemo'" 
+pe "kubectl exec ${POD} -- pgbench -U $POSTGRES_USER -i -s 5 pxdemo" 
+pe "kubectl exec ${POD} -- psql -U $POSTGRES_USER -d pxdemo -c 'select count(*) from pgbench_accounts'" 
 
 # ************ FAIL ************ #
 
@@ -38,18 +39,18 @@ NODE=`kubectl get pods -l app=postgres -o wide | grep -v NAME | awk '{print $7}'
 pe "kubectl cordon ${NODE}"
 POD=`kubectl get pods -l app=postgres -o wide | grep -v NAME | awk '{print $1}'`
 pe "kubectl delete pod ${POD}"
-pei "watch kubectl get pods -l app=postgres -o wide"
+pe "watch kubectl get pods -l app=postgres -o wide"
 
 # show same data is there. (uncordon node)
 kubectl uncordon ${NODE}
 POD=`kubectl get pods -l app=postgres | grep Running | grep 1/1 | awk '{print $1}'`
-pe "kubectl exec ${POD} -- psql -d pxdemo -c 'select count(*) from pgbench_accounts'" 
+pe "kubectl exec ${POD} -- psql -U $POSTGRES_USER -d pxdemo -c 'select count(*) from pgbench_accounts'" 
 
 # ************ GROUP SNAP ************ #
 
 # view statefulset (cassandra)
 pe "kubectl get pods -l app=cassandra"
-pei "kubectl get pvc | grep cassandra"
+pe "kubectl get pvc | grep cassandra"
 
 # insert data, flush data
 CASSPOD=`kubectl get pods -l app=cassandra -o wide | head -n 2 | grep -v NAME | awk '{print $1}'`
@@ -61,7 +62,7 @@ pe "kubectl exec ${CASSPOD} -- nodetool flush"
 
 # take snapshot, view group snapshot
 pe "cat ../../apps/DistributedSQL/Cassandra/cass-group-snap.yaml"
-pei "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-group-snap.yaml"
+pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-group-snap.yaml"
 pe "watch kubectl get volumesnapshots"
 
 # drop tables
@@ -77,7 +78,7 @@ sed -i 's/<REPLACE-3>/'$snap1'/g' cass-vols-from-snaps.yaml
 pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-from-snaps.yaml"
 
 # view data valid
-pei "watch kubectl get pods -l app=cassandra-restored -o wide"
+pe "watch kubectl get pods -l app=cassandra-restored -o wide"
 pe "kubectl exec cqlsh -- cqlsh cassandra-restored-0.cassandra-restored.default.svc.cluster.local --cqlversion=3.4.2 -f /tmp/cass-select.cql"
 
 # ************ AUTOPILOT PVC ************ #
@@ -87,10 +88,10 @@ pe "kubectl get pvc | grep postgres"
 
 # view and apply AP rule
 pe "cat  ../../apps/RDBMS/Postgres/SingleNode/postgres-ap-rule.yaml"
-pei "kubectl create -f ../../apps/RDBMS/Postgres/SingleNode/postgres-ap-rule.yaml"
+pe "kubectl create -f ../../apps/RDBMS/Postgres/SingleNode/postgres-ap-rule.yaml"
 
 # run command to fill DB
-pe "kubectl exec ${POD} -- pgbench -i -s 75 pxdemo" 
+pe "kubectl exec ${POD} -- pgbench -U $POSTGRES_USER -i -s 75 pxdemo" 
 
 # view output of AP rule
 pe "watch kubectl get events --field-selector involvedObject.kind=AutopilotRule --all-namespaces"
