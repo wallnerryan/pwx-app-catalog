@@ -4,7 +4,8 @@ metadata:
     name: px-postgres-sc
 provisioner: kubernetes.io/portworx-volume
 parameters:
-   repl: "1"
+   repl: "2"
+allowVolumeExpansion: true
 
 ---
 
@@ -21,7 +22,7 @@ spec:
      - ReadWriteOnce
    resources:
      requests:
-       storage: 5Gi
+       storage: 2Gi
 ---
 
 

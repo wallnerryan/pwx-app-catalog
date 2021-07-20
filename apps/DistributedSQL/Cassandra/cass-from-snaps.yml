@@ -2,46 +2,36 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: cassandra
-  name: cassandra
+    app: cassandra-restored
+  name: cassandra-restored
 spec:
   clusterIP: None
   ports:
     - port: 9042
   selector:
-    app: cassandra
-
+    app: cassandra-restored
 ---
-
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: px-storageclass
-provisioner: kubernetes.io/portworx-volume
-parameters:
-  repl: "2"
-  priority_io: "high"
-  group: "cassandra_vg"
-
----
-
-apiVersion: "apps/v1beta1"
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: cassandra
+  name: cassandra-restored
 spec:
-  serviceName: cassandra
+  serviceName: cassandra-restored
   replicas: 3
+  selector:
+    matchLabels:
+      app: cassandra-restored
   template:
     metadata:
       labels:
-        app: cassandra
+        app: cassandra-restored
     spec:
       # Use the stork scheduler to enable more efficient placement of the pods
       schedulerName: stork
+      terminationGracePeriodSeconds: 1800
       containers:
       - name: cassandra
-        image: gcr.io/google-samples/cassandra:v13
+        image: gcr.io/google-samples/cassandra:v14
         imagePullPolicy: Always
         ports:
         - containerPort: 7000
@@ -52,13 +42,28 @@ spec:
           name: jmx
         - containerPort: 9042
           name: cql
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 1Gi
+          requests:
+           cpu: "500m"
+           memory: 1Gi
+        securityContext:
+          capabilities:
+            add:
+              - IPC_LOCK
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "PID=$(pidof java) && kill $PID && while ps -p $PID > /dev/null; do sleep 1; done"]
         env:
           - name: MAX_HEAP_SIZE
-            value: 1024M
+            value: 512M
           - name: HEAP_NEWSIZE
-            value: 500M
+            value: 100M
           - name: CASSANDRA_SEEDS
-            value: "cassandra-0.cassandra.default.svc.cluster.local"
+            value: "cassandra-restored-0.cassandra-restored.default.svc.cluster.local"
           - name: CASSANDRA_CLUSTER_NAME
             value: "K8Demo"
           - name: CASSANDRA_DC
