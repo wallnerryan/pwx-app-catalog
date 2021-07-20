@@ -9,4 +9,6 @@ kubectl delete svc --all
 kubectl delete secrets --all
 kubectl delete configmap --all
 kubectl delete pods --all
+kubectl delete groupvolumesnapshots --all
+kubectl delete rules --all
 kubectl delete sc cockroach-pwx-storage-class px-postgres-sc px-storageclass 

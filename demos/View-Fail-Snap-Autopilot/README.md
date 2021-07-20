@@ -15,4 +15,7 @@ This demo will setup postgres and cassandra, vie pvcs, failover the app, snapsho
 
 ## Run the Demo
 
+If you are not familiar with demo-magic. Just press enter. The demo will type everything for you. 
+ - For commands that use `watch` you will *ctrl-c* out, then continue pressing enter.
+
 `sh demo.sh`

@@ -72,9 +72,9 @@ pe "kubectl exec cqlsh -- cqlsh cassandra-0.cassandra.default.svc.cluster.local 
 snap1=`kubectl get volumesnapshot | sed -n '2p' |  grep -v NAME | awk '{print $1}'`
 snap2=`kubectl get volumesnapshot | sed -n '3p' |  grep -v NAME | awk '{print $1}'`
 snap3=`kubectl get volumesnapshot | sed -n '4p' |  grep -v NAME | awk '{print $1}'`
-sed -i 's/<REPLACE-1>/'$snap1'/g' cass-vols-from-snaps.yml
-sed -i 's/<REPLACE-2>/'$snap1'/g' cass-vols-from-snaps.yml
-sed -i 's/<REPLACE-3>/'$snap1'/g' cass-vols-from-snaps.yml
+sed -i 's/<REPLACE-1>/'$snap1'/g' ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml
+sed -i 's/<REPLACE-2>/'$snap1'/g' ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml
+sed -i 's/<REPLACE-3>/'$snap1'/g' ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml
 pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml"
 pe "kubectl get pvc | grep restored"
 pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-from-snaps.yml"
