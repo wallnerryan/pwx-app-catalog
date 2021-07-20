@@ -4,7 +4,7 @@ https://github.com/paxtonhare/demo-magic
 
 ## View, Fail, GroupSnap, AutoPilot PVC
 
-This demo will setup postgres and cassandra, vie pvcs, failover the app, snapshot and restore and auto-grow pvc.
+This demo will setup postgres and cassandra, view pvc info, failover the app, snapshot and restore and auto-grow pvc.
 
 ## setup
 

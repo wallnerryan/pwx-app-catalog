@@ -77,6 +77,7 @@ sed -i 's/<REPLACE-2>/'$snap1'/g' ../../apps/DistributedSQL/Cassandra/cass-vols-
 sed -i 's/<REPLACE-3>/'$snap1'/g' ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml
 pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml"
 pe "kubectl get pvc | grep restored"
+kubectl delete statefulset cassandra
 pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-from-snaps.yml"
 
 # view data valid
