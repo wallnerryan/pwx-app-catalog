@@ -47,3 +47,10 @@ Post
 ```
 None
 ```
+
+### OCP
+oc create ns pg
+
+oc adm policy add-scc-to-user anyuid system:serviceaccount:pg:default
+
+oc create -f postgres-ocp.yaml
