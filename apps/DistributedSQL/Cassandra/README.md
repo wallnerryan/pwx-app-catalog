@@ -63,3 +63,8 @@ nodetool verify
 nodetool verify -- <keyspace>
 ```
 
+## Datastax Operator
+
+Install operator via operatorhub or https://github.com/datastax/cass-operator/tree/master/docs/user 
+
+oc create -f datastax-operator-cassandra-datacenter.yaml -n db-ops
