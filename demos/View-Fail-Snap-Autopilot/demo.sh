@@ -63,15 +63,15 @@ pe "kubectl exec ${CASSPOD} -- nodetool flush"
 # take snapshot, view group snapshot
 pe "cat ../../apps/DistributedSQL/Cassandra/cass-group-snap.yml"
 pe "kubectl create -f ../../apps/DistributedSQL/Cassandra/cass-group-snap.yml"
-pe "watch kubectl get volumesnapshots"
+pe "watch kubectl get volumesnapshot.volumesnapshot.external-storage.k8s.io"
 
 # drop tables
 pe "kubectl exec cqlsh -- cqlsh cassandra-0.cassandra.default.svc.cluster.local --cqlversion=3.4.2 -f /tmp/cass-drop.cql"
 
 # restore cassandra
-snap1=`kubectl get volumesnapshot | sed -n '2p' |  grep -v NAME | awk '{print $1}'`
-snap2=`kubectl get volumesnapshot | sed -n '3p' |  grep -v NAME | awk '{print $1}'`
-snap3=`kubectl get volumesnapshot | sed -n '4p' |  grep -v NAME | awk '{print $1}'`
+snap1=`kubectl get volumesnapshot.volumesnapshot.external-storage.k8s.io | sed -n '2p' |  grep -v NAME | awk '{print $1}'`
+snap2=`kubectl get volumesnapshot.volumesnapshot.external-storage.k8s.io | sed -n '3p' |  grep -v NAME | awk '{print $1}'`
+snap3=`kubectl get volumesnapshot.volumesnapshot.external-storage.k8s.io | sed -n '4p' |  grep -v NAME | awk '{print $1}'`
 sed -i 's/<REPLACE-1>/'$snap1'/g' ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml
 sed -i 's/<REPLACE-2>/'$snap2'/g' ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml
 sed -i 's/<REPLACE-3>/'$snap3'/g' ../../apps/DistributedSQL/Cassandra/cass-vols-from-snaps.yml
