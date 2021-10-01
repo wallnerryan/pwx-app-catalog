@@ -9,9 +9,10 @@ This demo will setup postgres and cassandra, view pvc info, failover the app, sn
 ## setup
 
 1. Install the "autopilot" template from https://github.com/andrewh1978/px-deploy
-2. connect to your environment `px-deploy connect -n my-ap-template`
-3. `yum --enablerepo=extras install epel-release -y && yum install pv -y`
-4. `cleanup.sh`
+   `px-deploy create -n autopilot-demo-01 -t autopilot`
+3. connect to your environment `px-deploy connect -n my-ap-template`
+4. `yum --enablerepo=extras install epel-release -y && yum install pv -y`
+5. `cleanup.sh`
 
 ## Run the Demo
 
