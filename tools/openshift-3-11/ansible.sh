@@ -1,0 +1,11 @@
+
+ansible osnodes -i inventory.yaml -m shell -b -a "yum -y install docker-novolume-plugin"
+ansible osnodes -i inventory.yaml -m shell -b -a "systemctl enable docker-novolume-plugin"
+ansible osnodes -i inventory.yaml -m shell -b -a "systemctl start docker-novolume-plugin"
+ansible osnodes -i inventory.yaml -m copy -b -a "src=docker.cfg dest=/etc/sysconfig/docker"
+ansible osnodes -i inventory.yaml -m copy -b -a "src=daemon.json dest=/etc/docker/daemon.json"
+ansible osnodes -i inventory.yaml -m shell -b -a "systemctl daemon-reload; systemctl enable docker; systemctl restart docker;"
+ansible osnodes -i inventory.yaml -m shell -b -a "yum install -y glusterfs-fuse"
+ansible osnodes -i inventory.yaml -m shell -b -a "subscription-manager repos --enable=rh-gluster-3-client-for-rhel-7-server-rpms"
+ansible osnodes -i inventory.yaml -m shell -b -a "yum update -y glusterfs-fuse"
+ansible osnodes -i inventory.yaml -m copy -b -a "src=resolv.conf dest=/etc/resolv.conf"

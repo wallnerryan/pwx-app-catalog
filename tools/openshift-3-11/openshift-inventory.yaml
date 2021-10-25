@@ -1,0 +1,64 @@
+# Create an OSEv3 group that contains the masters, nodes, and etcd groups
+[OSEv3:children]
+masters
+nodes
+etcd
+glusterfs
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+# If ansible_ssh_user is not root, ansible_become must be set to true
+#ansible_become=true
+
+openshift_master_default_subdomain=apps.ocp311.cluster.test
+
+openshift_deployment_type=openshift-enterprise
+oreg_auth_user=<USER>
+oreg_auth_password=<PASS>
+
+openshift_hosted_manage_registry=false
+
+# uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
+#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+
+#gluster
+openshift_storage_glusterfs_namespace=app-storage
+openshift_storage_glusterfs_storageclass=true
+openshift_storage_glusterfs_storageclass_default=false
+openshift_storage_glusterfs_block_deploy=true
+openshift_storage_glusterfs_block_host_vol_size=100
+openshift_storage_glusterfs_block_storageclass=true
+openshift_storage_glusterfs_block_storageclass_default=false
+openshift_storage_glusterfs_image=registry.redhat.io/rhgs3/rhgs-server-rhel7:v3.11
+openshift_storage_glusterfs_block_image=registry.redhat.io/rhgs3/rhgs-gluster-block-prov-rhel7:v3.11
+openshift_storage_glusterfs_s3_image=registry.redhat.io/rhgs3/rhgs-s3-server-rhel7:v3.11
+openshift_storage_glusterfs_heketi_image=registry.redhat.io/rhgs3/rhgs-volmanager-rhel7:v3.11
+openshift_storage_glusterfs_registry_image=registry.redhat.io/rhgs3/rhgs-server-rhel7:v3.11
+openshift_storage_glusterfs_block_registry_image=registry.redhat.io/rhgs3/rhgs-gluster-block-prov-rhel7:v3.11
+openshift_storage_glusterfs_s3_registry_image=registry.redhat.io/rhgs3/rhgs-s3-server-rhel7:v3.11
+openshift_storage_glusterfs_heketi_registry_image=registry.redhat.io/rhgs3/rhgs-volmanager-rhel7:v3.11
+
+# host group for masters
+[masters]
+master.ocp311.cluster.test
+
+# host group for etcd
+[etcd]
+master.ocp311.cluster.test
+
+# host group for nodes, includes region info
+[nodes]
+master.ocp311.cluster.test openshift_node_group_name='node-config-master'
+worker-1.ocp311.cluster.test openshift_node_group_name='node-config-compute'
+worker-2.ocp311.cluster.test openshift_node_group_name='node-config-compute'
+worker-3.ocp311.cluster.test openshift_node_group_name='node-config-compute'
+worker-4.ocp311.cluster.test openshift_node_group_name='node-config-compute'
+infra-1.ocp311.cluster.test openshift_node_group_name='node-config-infra'
+
+[glusterfs]
+worker-2.ocp311.cluster.test glusterfs_devices='[ "/dev/sdb" ]'
+worker-3.ocp311.cluster.test glusterfs_devices='[ "/dev/sdb" ]'
+worker-4.ocp311.cluster.test glusterfs_devices='[ "/dev/sdb" ]'

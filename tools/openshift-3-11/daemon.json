@@ -1,0 +1,5 @@
+{
+  "iptables": false,
+  "ip-masq": false,
+  "live-restore": true
+}
