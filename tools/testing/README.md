@@ -11,6 +11,7 @@ git clone https://github.com/wallnerryan/pwx-app-catalog.git
 wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
 python get-pip.py
 pip install setuptools --upgrade
+cd pwx-app-catalog/tools/testing
 pip install --ignore-installed -r requirements.txt
 ```
 
