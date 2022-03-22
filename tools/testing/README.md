@@ -40,3 +40,7 @@ Runs # of PVC creation requests to bind with a certain interval.
 ### add_volumes_over_time_with_load
 
 Runs # of PVC creation requests to bind with a certain interval with load attached to each pvc.
+
+
+## Known issues
+If you are running on Ubuntu with YAML 5.1+, add_volumes_over_time_with_load() will complain about `Loader`. You may update line in file to use `yaml.safe_load()` instead of `yaml.load()` or downgrade YAML.
