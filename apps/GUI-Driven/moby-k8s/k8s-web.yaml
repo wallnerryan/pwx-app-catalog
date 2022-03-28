@@ -23,7 +23,7 @@ spec:
         - containerPort: 80
         env:
         - name: USE_POSTGRES_HOST
-          value: "pg-service.demo.svc.cluster.local"
+          value: "pg-service"
         - name: USE_POSTGRES_PORT
           value: "5432"
         - name: POSTGRES_USER
