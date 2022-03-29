@@ -1,0 +1,22 @@
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: kubernetes.io/portworx-volume
+  finalizers:
+  - kubernetes.io/pv-protection
+  name: <PVC_NAME>
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: postgres-data
+    namespace: default
+  persistentVolumeReclaimPolicy: Delete
+  portworxVolume:
+    volumeID: "<VOL_ID>"
+  storageClassName: px-postgres-sc
+  volumeMode: Filesystem
