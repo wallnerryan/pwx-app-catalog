@@ -36,6 +36,8 @@ elasticsearch-data-elasticsearch-es-default-2   Bound    pvc-cda83234-b97a-462f-
 
 Get nodes via API
 ```
+PASSWORD=$(kubectl -n elasticsearch get secret elasticsearch-es-elastic-user -o go-template='{{.data.elastic | base64decode}}')
+
 kubectl -n elasticsearch exec elasticsearch-es-default-0 -- /bin/sh -c "curl -X GET -u \"elastic:$PASSWORD\" -k \"https://elasticsearch-es-http:9200/_cat/nodes?v\""
 oad_5m load_15m node.role master name
 10.233.96.88            62          64   7    0.83    0.74     0.58 dilmrt    *      elasticsearch-es-default-1
