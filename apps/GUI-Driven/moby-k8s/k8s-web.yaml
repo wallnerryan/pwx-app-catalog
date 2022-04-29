@@ -17,19 +17,19 @@ spec:
     spec:
       containers:
       - name: k8s-counter
-        image: wallnerryan/moby-counter:v1.15
+        image: wallnerryan/moby-counter:v1.21
         imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
         - name: USE_POSTGRES_HOST
-          value: "pg-service"
+          value: "pg-service" #Update to your PG Host
         - name: USE_POSTGRES_PORT
-          value: "5432"
+          value: "5432" #Update to your PG Port
         - name: POSTGRES_USER
-          value: "postgres"
-        - name: POSTGRES_PASSWORD
-          value: "admin123"
+          value: "postgres" #Update to your PG User
+        - name: POSTGRES_PASSWORD # TODO: use secret for password
+          value: "admin123" #Update to your PG Password
 
 ---
 
