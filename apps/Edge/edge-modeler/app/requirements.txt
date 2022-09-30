@@ -11,7 +11,7 @@ h5py==3.1.0
 idna==2.10
 itsdangerous==2.0.1
 Jinja2==3.0.1
-joblib==1.0.1
+joblib==1.2.0
 Keras==2.4.3
 keras-nightly==2.5.0.dev2021032900
 Keras-Preprocessing==1.1.2
